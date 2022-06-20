@@ -1,10 +1,10 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
-const Order_Tab = () => {
+const Order_Tab = ({ navigation, route}) => {
   return (
-    <View style={{alignItems: 'center', justifyContent: 'center',flex: 1}}>
-    <Text>Các mục bạn đã đặt</Text>
+    <View style={{}}>
+    <Text style={{color: 'black'}}>{route.params.nameRoomOder}</Text>
   </View>
   )
 }

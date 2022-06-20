@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     logoImage: {
-        flex: 1.2,
+        flex: 1,
         backgroundColor: 'white',
         resizeMode: "contain",
         width: '100%',
@@ -194,9 +194,10 @@ const styles = StyleSheet.create({
       fontSize: 16,
       fontWeight: 'bold',
       textAlign: 'center',
-      backgroundColor: 'red',
+      backgroundColor: '#FF4500',
       paddingVertical: '3%',
       borderRadius: 6,
+      color: 'white'
     },
 
     textSignin: {

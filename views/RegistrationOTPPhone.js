@@ -101,8 +101,9 @@ const styles = StyleSheet.create({
       fontSize: 16,
       fontWeight: 'bold',
       textAlign: 'center',
-      backgroundColor: 'red',
+      backgroundColor: '#FF4500',
       paddingVertical: '3%',
       borderRadius: 6,
+      color: 'white'
     },
 })

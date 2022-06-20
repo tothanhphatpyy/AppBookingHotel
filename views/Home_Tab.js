@@ -99,10 +99,10 @@ const Home_Tab = ( {navigation} ) => {
       type: 'CĂN HỘ STUDIO',
       discount: '5%',
       imageDiscount: require('./img/giamgia.png'),
-      image: require('./img/hanoi1.jpg'),
+      image: 'https://cdn.luxstay.com/admins/12/2TR6G7u6ua140zR2NI4yUJdG.png',
       iconSamset : require('./img/samset.png'),
-      title: 'Amazing Stay- Homestay, city view, near center Hanoi, NK Cau Giay',
-      note: '2 khách - 1 phòng ngủ - 1 phòng tắm',
+      title: 'The Galaxy Home - 1 Phòng Ngủ, 60m2, View Thành Phố',
+      note: '2 khách • 1 phòng ngủ • 1 phòng tắm',
       price : {
         priceDiscount: '294,500',
         priceDefault: '310.000',
@@ -118,9 +118,9 @@ const Home_Tab = ( {navigation} ) => {
       discount: '5%',
       imageDiscount: require('./img/giamgia.png'),
       iconSamset : require('./img/samset.png'),
-      image: require('./img/hanoi2.jpg'),
+      image: 'https://cdn.luxstay.com/rooms/37700/large/z1524272492025_605d495f57bc2c7b817fafb9bb5abbe8.jpg',
       title: 'Hanowood Homestay',
-      note: '2 khách - 1 phòng ngủ - 1 phòng tắm',
+      note: '2 khách • 1 phòng ngủ • 1 phòng tắm',
       price : {
         priceDiscount: '568.000',
         priceDefault: '',
@@ -136,9 +136,9 @@ const Home_Tab = ( {navigation} ) => {
       discount: '5%',
       imageDiscount: require('./img/giamgia.png'),
       iconSamset : require('./img/samset.png'),
-      image: require('./img/hanoi3.jpg'),
+      image: 'https://cdn.luxstay.com/users/381488/uTgnZ95ZYdtZoEQ8kE-48iHF.jpeg',
       title: 'La Ava’s Home',
-      note: '4 khách - 2 phòng ngủ - 2 phòng tắm',
+      note: '4 khách • 2 phòng ngủ • 2 phòng tắm',
       price : {
         priceDiscount: '580,000',
         priceDefault: '630.000',
@@ -154,9 +154,9 @@ const Home_Tab = ( {navigation} ) => {
       discount: '5%',
       imageDiscount: require('./img/giamgia.png'),
       iconSamset : require('./img/samset.png'),
-      image: require('./img/hanoi4.jpg'),
+      image: 'https://cdn.luxstay.com/users/354826/kV0JTJvfJaj8wTRMvSP9sIfD.jpg',
       title: 'Aura Home 16Typh',
-      note: '2 khách - 1 phòng ngủ - 1 phòng tắm',
+      note: '2 khách • 1 phòng ngủ • 1 phòng tắm',
       price : {
         priceDiscount: '1.200.000',
         priceDefault: '',
@@ -206,9 +206,6 @@ const Home_Tab = ( {navigation} ) => {
        <StatusBar
         animated={true}
         backgroundColor="black" />
-     
-    
-     
       <ScrollView style={styles.scrollView}>
         <View>
           <Image
@@ -239,7 +236,7 @@ const Home_Tab = ( {navigation} ) => {
                   source={item.image} />
                 <Text
                   numberOfLines={1} 
-                  style={{marginTop: 10, fontWeight: 'bold'}}>{item.name.length > 9 ? `${item.name.slice(0,10)}...` : item.name}</Text>
+                  style={{marginTop: 10, color: 'black', fontSize : 12, fontWeight : '500'}}>{item.name.length > 9 ? `${item.name.slice(0,10)}...` : item.name}</Text>
               </TouchableOpacity>
             )} 
         </ScrollView>
@@ -261,7 +258,7 @@ const Home_Tab = ( {navigation} ) => {
                 source={{uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwDAGqSd3F8vuVO4VXWmWzdGB1C_JBDfTSxg&usqp=CAU'}} />
               <View style={{paddingLeft: 10}}>
                 <Text style={{fontWeight: 'bold', color:'black', paddingVertical: 4, fontSize: 16}}>Homestay</Text>
-                <Text numberOfLines={1} style={{fontSize: 13}}>Căn hộ dịch vụ đặc biệt dành cho các bạn trẻ</Text>
+                <Text numberOfLines={1} style={{fontSize: 13, color: '#484848'}}>Căn hộ dịch vụ đặc biệt dành cho các bạn trẻ</Text>
               </View>
             </TouchableOpacity>
 
@@ -278,7 +275,7 @@ const Home_Tab = ( {navigation} ) => {
                 source={{uri: 'https://khuvuichoi.com/wp-content/uploads/2020/10/cong-vien-nuoc-thanh-long-1.jpg'}} />
               <View style={{paddingLeft: 10}}>
                 <Text style={{fontWeight: 'bold', color:'black', paddingVertical: 4, fontSize: 16}}>Vé tham quan</Text>
-                <Text numberOfLines={1} style={{fontSize: 13}}>Mua vé thật dễ dàng</Text>
+                <Text numberOfLines={1} style={{fontSize: 13,color: '#484848'}}>Mua vé thật dễ dàng</Text>
               </View>
             </TouchableOpacity>
         </ScrollView>
@@ -287,7 +284,7 @@ const Home_Tab = ( {navigation} ) => {
         <View style={{marginTop: 30,}}>
           <View>
             <Text style={{fontWeight: 'bold', fontSize: 20, color: 'black'}}>Ưu đãi độc quyền</Text>
-            <Text>Chỉ có tại Luxstay, hấp dẫn và hữu hạn, book ngay!</Text>
+            <Text style={{color: '#707070', marginTop: 5}}>Chỉ có tại Luxstay, hấp dẫn và hữu hạn, book ngay!</Text>
           </View>
           <ScrollView
             style={{ marginTop : 20}}
@@ -295,7 +292,7 @@ const Home_Tab = ( {navigation} ) => {
             showsHorizontalScrollIndicator={false}>
             {listVoucher.map((item, index) => 
             <TouchableOpacity key={index}>
-              <Image key={index} style={{flex: 1,resizeMode: 'contain', height: 160, width: 330, borderRadius: 10, marginRight: 20 }}  source={item.image} />
+              <Image key={index} style={{flex: 1,resizeMode: 'contain', height: 160, width: 320, borderRadius: 10, marginRight: 10 }}  source={item.image} />
             </TouchableOpacity>
                 
             )}
@@ -303,30 +300,34 @@ const Home_Tab = ( {navigation} ) => {
         </View>
 
         {/* Suggest */}
-        <View style={{marginTop: 30,}}>
+        <View style={{marginTop: 30,marginRight: 10,}}>
           <Text style={{fontWeight: 'bold', fontSize: 20, color: 'black'}}>Gợi ý từ Luxstay</Text>
           <ScrollView 
             horizontal
             style={{}}
             showsHorizontalScrollIndicator={false}>
+              
               {listLocationSuggest.map((item, index) =>   
-                <TouchableOpacity key={index} style={{marginTop: 20,}}>
-                <Image 
-                  style={{ flex: 1,resizeMode: 'contain', height: 180, width: 330, borderRadius: 10, marginRight: 20 }}
+              <TouchableOpacity 
+                key={index} 
+                style={{marginTop: 20, marginRight: 10,elevation: 1.5, }}>
+              <Image 
+                  style={{resizeMode: 'contain', height: 200, width: 310, borderTopLeftRadius: 10,borderTopRightRadius: 10 }}
                   source={item.image} />
-                <View style={{maxWidth: 320, marginLeft: 10}}>
-                  <Text style={{marginTop: 8,fontWeight: 'bold', color: 'black', fontSize: 17}}>{item.title}</Text>
-                  <Text style={{marginTop: 2,}}>{item.note}</Text>
-                </View>
-                </TouchableOpacity>
+              <View style={{ marginLeft: 20}}>
+                <Text style={{marginTop: 8,fontWeight: 'bold', color: 'black', fontSize: 17}}>{item.title}</Text>
+                <Text style={{marginTop: 2,color: '#484848', maxWidth: 280}}>{item.note}</Text>
+              </View>
+              </TouchableOpacity>
               )}
+             
              
           </ScrollView>
         </View>
 
         {/* Suggest Location */}
-        <View>
-          <View style={{marginTop: 30}}>
+        <View style={{marginRight: 10}}>
+          <View style={{marginTop: 30,}}>
             <Text style={{fontWeight: 'bold', fontSize: 20, color: 'black'}}>Trải nghiệm đáng nhớ</Text>
             <Text style={{color: 'gray', marginTop: 5}}>Ở mỗi thành phố xa xôi, giữ lại cho mình một chốn dừng chân ấm áp</Text>
           </View>
@@ -338,8 +339,8 @@ const Home_Tab = ( {navigation} ) => {
             {listLocation2.map((item, index) => 
               <TouchableHighlight key={index}>
               <Text 
-                style={{flex: 1, marginRight: 30, borderWidth: 0.5, borderColor: 'gray', fontWeight: 'bold', color: index == colorEvent ? 'white'  : 'black',
-                        backgroundColor: index == colorEvent ? 'orange'  : 'white', paddingHorizontal: 15, paddingVertical: 3, textAlign: 'center',
+                style={{flex: 1, marginRight: 20, borderWidth: 0.5, borderColor: 'gray', fontWeight: 'bold', color: index == colorEvent ? 'white'  : 'black',
+                        backgroundColor: index == colorEvent ? 'orange'  : 'white', paddingHorizontal: 15, paddingVertical: 3, textAlign: 'center', fontSize: 13,
                         borderRadius: 15}}
                         onPress={() => {
                           setColorEvent(index)
@@ -353,47 +354,50 @@ const Home_Tab = ( {navigation} ) => {
           </ScrollView>
 
           {/* SuggetRoom */}
-          <View style={{flex: 1, marginRight: 12}}>
-            <View style={{marginRight: 15, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between'}}>
+          <View style={{flex: 1}}>
+            <View style={{flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between'}}>
                 {listLocationSuggest2.map((item, index) => 
                   <TouchableOpacity 
                   key={index}
                   onPress={() => navigation.navigate('Thông tin phòng')}
                   >                  
-                        <Image style={{marginTop: 20, height: 100, width: 160}} source={item.image} />
-                        <TouchableOpacity
-                          onPress={() => {                         
-                          }} 
-                          style={{position: 'absolute',right: 12, top: 25,}}>
-                          {
-                            false == false ? <Image key={index} style={{resizeMode:'contain', height: 23, width: 25,}} source={require('./img/heart.png')} />
-                            : 
-                            <Image key={index} style={{resizeMode:'contain' ,height: 23, width: 25, }} source={require('./img/heart_change.png')}/>     
-                          }     
-                        </TouchableOpacity>    
-                        <View style={{ paddingTop: 5,width: 150}}>             
-                        <Text numberOfLines={1} style={{fontWeight: 'bold', fontSize: 11, color:'gray'}}>{item.type}</Text>
-                        {item.type =='CĂN HỘ STUDIO' ? <Image style={{position: 'absolute', height: 20, width: 40, right: -13, top: 5}} source={item.imageDiscount} /> : <Text style={{position: 'absolute'}}></Text>}        
-                        <Text style={{position: 'absolute', fontFamily: 'Roboto', fontSize: 11, fontWeight: 'bold', color: 'white', height: 20, width: 40, right: -28, top: 5}}>{item.discount}</Text>
-                        <Text numberOfLines={1} style={{ marginLeft: 13, fontWeight: 'bold', fontSize: 15, color: 'black'}}>{item.title}</Text>
-                        <Image style={{position: 'absolute',resizeMode:'contain' , height: 15, width: 35, left:-13, top: 22}} source={item.iconSamset} />
-                        <Text numberOfLines={1} style={{}}>{item.note}</Text>
-                        <Text numberOfLines={1} style={{fontWeight: 'bold', fontSize: 13, color: 'black'}}>
-                          {item.price.priceDiscount.concat(item.price.monetaryUnit)}
-                        </Text>
-                        <Text numberOfLines={1} style={{textDecorationLine: 'line-through', position: 'absolute',fontWeight: 'bold', fontSize: 12, color: 'gray',right: 30, top: 61}}>
-                          {item.type =='CĂN HỘ STUDIO' ? item.price.priceDefault.concat(item.price.monetaryUnit) : ' '}
-                        </Text>
-                        <View style={{flexDirection: 'row',}}>
-                            <Image style={{marginRight:2, resizeMode:'contain', height: 15, width: 15}} source={item.iconStar} />
-                            <Image style={{marginRight:2, resizeMode:'contain', height: 15, width: 15}} source={item.iconStar} />
-                            <Image style={{marginRight:2, resizeMode:'contain', height: 15, width: 15}} source={item.iconStar} />
-                            <Image style={{marginRight:2, resizeMode:'contain', height: 15, width: 15}} source={item.iconStar} />
-                            <Image style={{marginRight:2, resizeMode:'contain', height: 15, width: 15}} source={item.iconStar} />
-                            <Text style={{marginLeft: 10 , fontSize: 13}}>{item.numberOfReview}</Text>
-                        </View>
+                    <Image style={{marginTop: 20, height: 100, width: 150, resizeMode: 'contain', borderRadius: 5}} 
+                            source= {{uri: `${item.image}`}} />
+                      <TouchableOpacity
+                        onPress={() => {                         
+                        }} 
+                        style={{position: 'absolute',right: 12, top: 25,}}>
+                        {
+                          false == false ? <Image key={index} style={{resizeMode:'contain', height: 23, width: 25,}} source={require('./img/heart.png')} />
+                          : 
+                          <Image key={index} style={{resizeMode:'contain' ,height: 23, width: 25, }} source={require('./img/heart_change.png')}/>     
+                        }     
+                      </TouchableOpacity>    
+                      <View style={{ paddingTop: 5,width: 150}}>             
+                          <Text numberOfLines={1} style={{fontWeight: 'bold', fontSize: 10, color:'gray'}}>{item.type}</Text>
+                          {item.type =='CĂN HỘ STUDIO' ? <Image style={{position: 'absolute', height: 20, width: 40, right: -13, top: 5}} source={item.imageDiscount} /> : <Text style={{position: 'absolute'}}></Text>}        
+                          <Text style={{position: 'absolute', fontFamily: 'Roboto', fontSize: 11, fontWeight: 'bold', color: 'white', height: 20, width: 40, right: -28, top: 5}}>{item.discount}</Text>
+                          <Text numberOfLines={2} style={{ marginLeft: 13, fontWeight: 'bold', fontSize: 13, color: 'black'}}>{item.title}</Text>
+                          <Image style={{position: 'absolute',resizeMode:'contain' , height: 15, width: 35, left:-13, top: 22}} source={item.iconSamset} />
+                          <Text numberOfLines={1} style={{color: '#484848', fontSize: 11}}>{item.note}</Text>
+                          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                            <Text numberOfLines={1} style={{fontWeight: 'bold', fontSize: 13, color: 'black'}}>
+                              {item.price.priceDiscount.concat(item.price.monetaryUnit)}
+                            </Text>
+                            <Text numberOfLines={1} style={{textDecorationLine: 'line-through', fontWeight: 'bold', fontSize: 12, color: 'gray', marginLeft: 10}}>
+                              {item.type =='CĂN HỘ STUDIO' ? item.price.priceDefault.concat(item.price.monetaryUnit) : ' '}
+                            </Text>
+                          </View>
+                          <View style={{flexDirection: 'row',marginTop: 5}}>
+                              <Image style={{marginRight:2, resizeMode:'contain', height: 15, width: 15}} source={item.iconStar} />
+                              <Image style={{marginRight:2, resizeMode:'contain', height: 15, width: 15}} source={item.iconStar} />
+                              <Image style={{marginRight:2, resizeMode:'contain', height: 15, width: 15}} source={item.iconStar} />
+                              <Image style={{marginRight:2, resizeMode:'contain', height: 15, width: 15}} source={item.iconStar} />
+                              <Image style={{marginRight:2, resizeMode:'contain', height: 15, width: 15}} source={item.iconStar} />
+                              <Text style={{marginLeft: 10 , fontSize: 11, color: '#484848'}}>{item.numberOfReview}</Text>
+                          </View>
                       </View>
-                      
+                  
                   </TouchableOpacity>
                 )}
             </View>
@@ -410,7 +414,7 @@ export default Home_Tab
 const styles = StyleSheet.create({
     container: {
       flex : 1,
-      paddingLeft: 30,
+      paddingLeft: 15,
       backgroundColor: 'white',
     },
 
@@ -420,7 +424,7 @@ const styles = StyleSheet.create({
       resizeMode: 'cover',
       height: 100,
       width: 200,
-      marginLeft: -40,
+      marginLeft: -30,
     },
 
     textAnswer: {
@@ -428,7 +432,7 @@ const styles = StyleSheet.create({
       color: 'black',
       fontFamily: 'Roboto',
       fontWeight: 'bold',
-      fontSize: 24,
+      fontSize: 23,
       marginTop: 10,
     },
     search: {

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View,Image, TextInput, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View,Image, TextInput, TouchableOpacity, TouchableHighlight } from 'react-native'
 import React from 'react'
 
 const RegistrationInfoUser = ({ navigation }) => {
@@ -63,14 +63,11 @@ const RegistrationInfoUser = ({ navigation }) => {
               style={styles.imgVector}
               source={require("./img/Vector.png")}
             />
-           
-    
               <TouchableOpacity>
                 <Text style= {styles.btnRegis}
-                onPress ={ () => navigation.navigate('Màn hình chính')}
+                      onPress ={ () => navigation.navigate('Màn hình chính')}
                 >ĐĂNG KÝ</Text>
-              </TouchableOpacity>
-              
+              </TouchableOpacity>      
           </View>
       </View>
       </View>
@@ -85,7 +82,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     logoImage: {
-        flex: 1.2,
+        flex: 0.7,
         backgroundColor: 'white',
         resizeMode: "contain",
         width: '100%',
@@ -98,14 +95,14 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 40,
         borderTopRightRadius: 40,   
         flex: 2,
-        backgroundColor: '#E0FFFF',
+        backgroundColor: '#F9F9F9',
     },
 
     textLogin: {
         fontFamily: 'Roboto',
         marginTop: '5%',
         marginLeft: '10%',
-        fontSize: 28,
+        fontSize: 25  ,
         color: 'black',
         fontWeight: 'bold',
     },
@@ -142,16 +139,15 @@ const styles = StyleSheet.create({
         color: 'black',
         fontWeight: 'bold',
     },
-    
-    
     btnRegis: {
       marginHorizontal: '10%',
       marginTop : '8%',
       fontSize: 16,
       fontWeight: 'bold',
       textAlign: 'center',
-      backgroundColor: 'red',
+      backgroundColor: '#FF4500',
       paddingVertical: '3%',
       borderRadius: 6,
+      color: 'white',
     },
 })
