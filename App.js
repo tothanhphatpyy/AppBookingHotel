@@ -10,6 +10,8 @@ import Tabs from './views/Tabs';
 import InfoRoom from './views/ListRoom/InfoRoom';
 import CheckIn from './views/ListRoom/CheckIn';
 import Order_Tab from './views/Tabs/Order_Tab';
+import ListRoom from './views/ListRoom';
+
 
 
 const Stack = createNativeStackNavigator();
@@ -17,7 +19,7 @@ const Stack = createNativeStackNavigator();
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{headerShown: false}} initialRouteName='Đăng nhập'>
+      <Stack.Navigator screenOptions={{headerShown: false}} initialRouteName='Màn hình chính'>
         <Stack.Screen name= 'Đăng nhập' component={Login} />
         <Stack.Screen name='Đăng kí SĐT' component={RegistrationPhone} />
         <Stack.Screen name= 'Đăng kí SĐT OTP' component={RegistrationOTPPhone}/> 
@@ -25,6 +27,7 @@ const App = () => {
         <Stack.Screen name= 'Màn hình chính' component={Tabs}  />
         <Stack.Screen name= 'Thông tin phòng' component={InfoRoom}  />
         <Stack.Screen name= 'Đặt phòng' component={CheckIn}  />
+        <Stack.Screen name= 'Danh sách phòng' component={ListRoom}  />
       </Stack.Navigator>
     </NavigationContainer>
   )

@@ -1,5 +1,6 @@
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, SafeAreaView, ScrollView, StatusBar, Alert, TouchableHighlight} from 'react-native'
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
 
 
@@ -7,9 +8,27 @@ const Home_Tab = ( {navigation} ) => {
 
   const [colorEvent, setColorEvent] = useState(0);
   const [arrayFavorite, setarrayFavorite] = useState([]); 
-  
+
+  const [listLocationTop, setListLocationTop] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () =>{
+      setLoading(true);
+      try {
+        const {data: response} = await axios.get(`http://192.168.1.4:3000/location`);
+        setListLocationTop(response);
+      } catch (error) {
+        console.error(error.message);
+      }
+      setLoading(false);
+    }
+    
+    fetchData();
+    
+  }, []);
  
-  const listLocation = [
+  /*  const listLocation = [
     {
       name : 'Quanh Đây',
       image: require('./img/location.png')
@@ -49,7 +68,7 @@ const Home_Tab = ( {navigation} ) => {
       name : 'Vũng Tàu',
       image: require('./img/vungtau1.png')
     },
-  ];
+  ]; */
 
   const listVoucher =[
     {
@@ -67,7 +86,6 @@ const Home_Tab = ( {navigation} ) => {
       image: require('./img/VoucherAirpay.jpg')
     },
   ];
-
   const listLocationSuggest =[
     {
       image: require('./img/homestay1.jpg'),
@@ -229,15 +247,16 @@ const Home_Tab = ( {navigation} ) => {
         <ScrollView style={styles.location} 
           horizontal 
           showsHorizontalScrollIndicator={false}>
-            {listLocation.map((item, index) => 
-              <TouchableOpacity key={index} style={{ alignItems: 'center', paddingRight: 25}}>
-                <Image 
-                  style={styles.itemImage}
-                  source={item.image} />
-                <Text
-                  numberOfLines={1} 
-                  style={{marginTop: 10, color: 'black', fontSize : 12, fontWeight : '500'}}>{item.name.length > 9 ? `${item.name.slice(0,10)}...` : item.name}</Text>
-              </TouchableOpacity>
+            {listLocationTop.map((item, index) => 
+                <TouchableOpacity key={index} style={{ alignItems: 'center', paddingRight: 25}} 
+                                  onPress={() => navigation.navigate('Danh sách phòng', {idLocation : item._id, name})}>
+                  <Image 
+                    style={styles.itemImage}
+                    source={{uri: item.image}} />
+                  <Text
+                    numberOfLines={1} 
+                    style={{marginTop: 10, color: 'black', fontSize : 12, fontWeight : '500'}}>{item.name.length > 9 ? `${item.name.slice(0,10)}...` : item.name}</Text>
+                </TouchableOpacity>
             )} 
         </ScrollView>
 
