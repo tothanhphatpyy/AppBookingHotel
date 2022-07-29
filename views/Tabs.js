@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, Image } from 'react-native'
 import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Home_Tab from './Home_Tab';
+import Home_Tab from './Home_Tab'
 import Like_Tab from './Tabs/Like_Tab';
 import Message_Tab from './Tabs/Message_Tab';
 import Order_Tab from './Tabs/Order_Tab';
@@ -58,7 +58,9 @@ const Tabs = () => {
                 />)
           }}
         />
-        <Tab.Screen name='Đặt chỗ của tôi' component={Order_Tab} 
+        <Tab.Screen name='Đặt chỗ của tôi' component={Order_Tab} initialParams={{infoRoomOder: null,
+                                                                                 dateOder : null,
+                                                                                 dateReturnOder : null}}
           options={{
             tabBarIcon: () => (
                 <Image 

@@ -1,6 +1,7 @@
-import { Image, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Image, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
+
 
 const ListRoom = ({navigation, route}) => {  
   const [listRoom, setListRoom] = useState([])
@@ -15,26 +16,20 @@ const ListRoom = ({navigation, route}) => {
     const fetchData = async () =>{
       setLoading(true);
       try {
-        const {data: response} = await axios.get(`http://192.168.1.4:3000/list-hotel/${idLocation}`);
+        const {data: response} = await axios.get(`http://192.168.1.3:3000/list-hotel/${idLocation}`);
         setListRoom(response);
       } catch (error) {
         console.error(error.message);
       }
       setLoading(false);
     }
-    
     fetchData();
     
   }, []);
-  console.log(listRoom)
-  
-
 
 
   return (
     <View style={{}}>
-      {loading && <Text style={{color: 'black'}}>Loading</Text>}
-
       {/* Header */}
       <StatusBar
         animated={true}
@@ -44,7 +39,7 @@ const ListRoom = ({navigation, route}) => {
         <TouchableOpacity style={{padding: 10}}
                           onPress={() => navigation.goBack()}>
           <Image
-              style={{resizeMode: 'contain', width: 20, height: 30,}}
+              style={{resizeMode: 'contain', width: 20, height: 30, tintColor: 'orange'}}
               source= {{uri: 'https://i.imgur.com/1RCGweh.png'}}/>
         </TouchableOpacity>
         <Text style={{color: 'black', fontWeight: '500', marginLeft: 10, fontSize: 15}}>{nameLocation}</Text>
@@ -68,21 +63,28 @@ const ListRoom = ({navigation, route}) => {
         </TouchableOpacity>
       </View>
 
-      {/* Body */}
+    {/* Body */}
+      {loading && (
+        <View style={{justifyContent: 'center', marginTop: 30, flexDirection: 'row'}}>
+        <Text style={{color: 'black', marginTop: 10}}>Loading...</Text>
+        <ActivityIndicator size="large" color="orange" />
+        </View>
+      )}
       <ScrollView>
       {!loading && (
         <View>
           {listRoom.map((item, index) => 
             <View key={index} style={{backgroundColor: '#E6E6E6', paddingBottom: 20}}> 
               <TouchableOpacity style={{marginTop: 15, marginHorizontal: 20, backgroundColor: 'white', borderRadius: 10,
-                              shadowColor: "#000",
-                              shadowOffset: {
-                                width: 0,
-                                height: 6,
-                              },
-                              shadowOpacity: 0.37,
-                              shadowRadius: 7.49,
-                              elevation: 12,}}> 
+                                      shadowColor: "#000",
+                                      shadowOffset: {
+                                        width: 0,
+                                        height: 6,
+                                      },
+                                      shadowOpacity: 0.37,
+                                      shadowRadius: 7.49,
+                                      elevation: 12,}}
+                                onPress= {() => navigation.navigate('Thông tin phòng', {idRoomSuggest : item._id})}> 
                 <Image
                   style={{resizeMode: 'cover', width: '100%', height: 170, borderTopRightRadius: 10, borderTopLeftRadius: 10}}
                   source= {{uri: item.img}}/>
@@ -102,7 +104,7 @@ const ListRoom = ({navigation, route}) => {
                 
             <View style={{marginTop: 10, flexDirection: 'row',marginLeft: 10}}>
               <Image
-                style={{resizeMode: 'contain', width: 10, height: 20, }}
+                style={{resizeMode: 'contain', width: 10, height: 20, tintColor: 'orange' }}
                 source= {{uri: 'https://i.imgur.com/UpBoUkc.png'}}/>
               <Text style={{color: 'black', fontSize: 14, fontWeight: 'bold', marginLeft: 5, marginRight: 30}}>
                 {item.nameRoom}
@@ -121,14 +123,13 @@ const ListRoom = ({navigation, route}) => {
                       style={{resizeMode: 'contain', width: 13, height: 20, tintColor: '#6B6B6B' }}
                       source= {{uri: 'https://i.imgur.com/QfbNL3x.png'}}/>
               <Text style={{color: '#383838', fontSize: 11, marginLeft: 7, marginRight: 30}}>
-                {item.detailRoom}
+                {item.numberPeople} khách • {item.numberBedRoom} phòng ngủ • {item.numberBathRoom} phòng tắm
               </Text>
             </View>
-            <Text style={{color: 'black', margin: 15, fontWeight: 'bold', fontSize: 15}}>{item.price}đ</Text>
+            <Text style={{color: 'black', margin: 15, fontWeight: 'bold', fontSize: 15}}>{item.priceMon_Fri}đ̲</Text>
           </TouchableOpacity>
         </View>
-        )}
-        
+        )}        
         <View style={{height: 200}}></View>
           </View>
       )}

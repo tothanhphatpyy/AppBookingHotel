@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, SafeAreaView, ScrollView, StatusBar, Alert, TouchableHighlight} from 'react-native'
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, SafeAreaView, ScrollView, StatusBar, Alert, TouchableHighlight, ActivityIndicator, ActivityIndicatorComponent} from 'react-native'
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
@@ -7,68 +7,50 @@ import axios from 'axios';
 const Home_Tab = ( {navigation} ) => {
 
   const [colorEvent, setColorEvent] = useState(0);
-  const [arrayFavorite, setarrayFavorite] = useState([]); 
-
-  const [listLocationTop, setListLocationTop] = useState([]);
+  const [listLocation, setListLocation] = useState([]);
+  const [listRoomSuggest, setListRoomSuggest] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () =>{
       setLoading(true);
       try {
-        const {data: response} = await axios.get(`http://192.168.1.4:3000/location`);
-        setListLocationTop(response);
+        const {data: response} = await axios.get(`http://192.168.1.3:3000/location`);
+        setListLocation(response);
       } catch (error) {
         console.error(error.message);
       }
       setLoading(false);
     }
-    
     fetchData();
-    
   }, []);
- 
-  /*  const listLocation = [
-    {
-      name : 'Quanh Đây',
-      image: require('./img/location.png')
-    },
 
-    {
-      name : 'Đà Nẵng',
-      image: require('./img/danang1.png')
-    },
+  const renderHotel = async (idLocation) => {
+      setLoading(true);
+      try {
+        const {data: response} = await axios.get(`http://192.168.1.3:3000/list-hotel/${idLocation}`);
+        setListRoomSuggest(response);
+      } catch (error) {
+        console.error(error.message);
+      }
+      setLoading(false);
+  }
 
-    {
-      name : 'Hội An',
-      image: require('./img/hoian1.png')
-    },
+  useEffect(() => {
+    const fetchData = async () =>{
+      setLoading(true);
+      try {
+        const {data: response} = await axios.get(`http://192.168.1.3:3000/list-hotel/62bc561974566b1417c880e2`);
+        setListRoomSuggest(response);
+      } catch (error) {
+        console.error(error.message);
+      }
+      setLoading(false);
+    }
+    fetchData();
+  }, []);
 
-    {
-      name : 'Nha Trang',
-      image: require('./img/nhatrang1.png')
-    },
 
-    {
-      name : 'Phú Quốc',
-      image: require('./img/phuquoc1.png')
-    },
-
-    {
-      name : 'Phú Yên',
-      image: require('./img/phuyen1.png')
-    },
-
-    {
-      name : 'Đà Lạt',
-      image: require('./img/dalat1.png')
-    },
-
-    {
-      name : 'Vũng Tàu',
-      image: require('./img/vungtau1.png')
-    },
-  ]; */
 
   const listVoucher =[
     {
@@ -111,112 +93,6 @@ const Home_Tab = ( {navigation} ) => {
       note: 'Trải nghiệm đẳng cấp tại những căn homestay có bể bơi đẹp và khu vực BBQ ấm cúng',
     }
   ];
-
-  const listLocationSuggest2 =[
-    {
-      type: 'CĂN HỘ STUDIO',
-      discount: '5%',
-      imageDiscount: require('./img/giamgia.png'),
-      image: 'https://cdn.luxstay.com/admins/12/2TR6G7u6ua140zR2NI4yUJdG.png',
-      iconSamset : require('./img/samset.png'),
-      title: 'The Galaxy Home - 1 Phòng Ngủ, 60m2, View Thành Phố',
-      note: '2 khách • 1 phòng ngủ • 1 phòng tắm',
-      price : {
-        priceDiscount: '294,500',
-        priceDefault: '310.000',
-        monetaryUnit: 'đ',
-      },
-      iconStar: require('./img/saodanhgia.png'),
-      numberOfReview: '17',
-      favorite: false,
-    },
-
-    {
-      type: 'CĂN HỘ CHUNG CƯ - VINHOME PLAZA',
-      discount: '5%',
-      imageDiscount: require('./img/giamgia.png'),
-      iconSamset : require('./img/samset.png'),
-      image: 'https://cdn.luxstay.com/rooms/37700/large/z1524272492025_605d495f57bc2c7b817fafb9bb5abbe8.jpg',
-      title: 'Hanowood Homestay',
-      note: '2 khách • 1 phòng ngủ • 1 phòng tắm',
-      price : {
-        priceDiscount: '568.000',
-        priceDefault: '',
-        monetaryUnit: 'đ',
-      },
-      iconStar: require('./img/saodanhgia.png'),
-      numberOfReview: '25',
-      favorite: false,
-    },
-
-    {
-      type: 'CĂN HỘ STUDIO',
-      discount: '5%',
-      imageDiscount: require('./img/giamgia.png'),
-      iconSamset : require('./img/samset.png'),
-      image: 'https://cdn.luxstay.com/users/381488/uTgnZ95ZYdtZoEQ8kE-48iHF.jpeg',
-      title: 'La Ava’s Home',
-      note: '4 khách • 2 phòng ngủ • 2 phòng tắm',
-      price : {
-        priceDiscount: '580,000',
-        priceDefault: '630.000',
-        monetaryUnit: 'đ',
-      },
-      iconStar: require('./img/saodanhgia.png'),
-      numberOfReview: '15',
-      favorite: false,
-    },
-
-    {
-      type: 'CĂN HỘ CHUNG CƯ - VINHOME PLAZA',
-      discount: '5%',
-      imageDiscount: require('./img/giamgia.png'),
-      iconSamset : require('./img/samset.png'),
-      image: 'https://cdn.luxstay.com/users/354826/kV0JTJvfJaj8wTRMvSP9sIfD.jpg',
-      title: 'Aura Home 16Typh',
-      note: '2 khách • 1 phòng ngủ • 1 phòng tắm',
-      price : {
-        priceDiscount: '1.200.000',
-        priceDefault: '',
-        monetaryUnit: 'đ',
-      },
-      iconStar: require('./img/saodanhgia.png'),
-      numberOfReview: '12',
-      favorite: false,
-    }
-  ];
-
-  const listLocation2 =[
-    {
-      name: 'Hà Nội',
-    },
-
-    {
-      name: 'TP. Hồ Chí Minh',
-    },
-
-    {
-      name: 'Hội An',
-    },
-    {
-      name: 'Đà Lạt',
-    },
-
-    {
-      name: 'Đà Nẵng',
-    },
-
-    {
-      name: 'Nha Trang',
-    },
-    {
-      name: 'Vũng Tàu',
-    },
-
-    {
-      name: 'Quảng Ninh',
-    },
-  ];
  
 
   return (
@@ -232,24 +108,20 @@ const Home_Tab = ( {navigation} ) => {
           />
               <Text style={styles.textAnswer}>Bạn muốn đi đâu?</Text>
         </View>
-        <View style={styles.search}>
+        <TouchableOpacity style={styles.search}>
           <Image
               style= {styles.imgIc_search}
               source = {require('./img/ic_search.png')}    
-            />
-            <TextInput
-                style ={styles.findInput}
-                placeholder="Thử tìm kiếm 'Ha Noi' "
-                placeholderTextColor= {'#CFCFCF'}
-            />
-        </View>
+          />
+          <Text style={styles.findInput}>Thử tìm kiếm Hà Nội</Text>
+        </TouchableOpacity>
         {/* location */}
         <ScrollView style={styles.location} 
           horizontal 
           showsHorizontalScrollIndicator={false}>
-            {listLocationTop.map((item, index) => 
+            {listLocation.map((item, index) => 
                 <TouchableOpacity key={index} style={{ alignItems: 'center', paddingRight: 25}} 
-                                  onPress={() => navigation.navigate('Danh sách phòng', {idLocation : item._id, name})}>
+                                  onPress={() => navigation.navigate('Danh sách phòng', {idLocation : item._id, nameLocation: item.name})}>
                   <Image 
                     style={styles.itemImage}
                     source={{uri: item.image}} />
@@ -310,7 +182,8 @@ const Home_Tab = ( {navigation} ) => {
             horizontal 
             showsHorizontalScrollIndicator={false}>
             {listVoucher.map((item, index) => 
-            <TouchableOpacity key={index}>
+            <TouchableOpacity key={index}
+                              onPress={() => navigation.navigate('Voucher')}>
               <Image key={index} style={{flex: 1,resizeMode: 'contain', height: 160, width: 320, borderRadius: 10, marginRight: 10 }}  source={item.image} />
             </TouchableOpacity>
                 
@@ -355,15 +228,15 @@ const Home_Tab = ( {navigation} ) => {
             horizontal
             showsHorizontalScrollIndicator={false}>
             {/* <Text style={{backgroundColor: 'pink', textAlign: 'center', paddingVertical: 2, marginRight: 290 }}>Hà Nội</Text> */}
-            {listLocation2.map((item, index) => 
+            {listLocation.map((item, index) => 
               <TouchableHighlight key={index}>
               <Text 
                 style={{flex: 1, marginRight: 20, borderWidth: 0.5, borderColor: 'gray', fontWeight: 'bold', color: index == colorEvent ? 'white'  : 'black',
                         backgroundColor: index == colorEvent ? 'orange'  : 'white', paddingHorizontal: 15, paddingVertical: 3, textAlign: 'center', fontSize: 13,
                         borderRadius: 15}}
                         onPress={() => {
-                          setColorEvent(index)
-                          // getValueIndex(index)                       
+                          setColorEvent(index);
+                          renderHotel(item._id);          
                          }}
                        >
                 {item.name}
@@ -374,52 +247,83 @@ const Home_Tab = ( {navigation} ) => {
 
           {/* SuggetRoom */}
           <View style={{flex: 1}}>
-            <View style={{flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between'}}>
-                {listLocationSuggest2.map((item, index) => 
+            {loading && (
+              <View style={{justifyContent: 'center', marginTop: 30, flexDirection: 'row'}}>
+              <Text style={{color: 'black', marginTop: 10}}>Loading...</Text>
+              <ActivityIndicator size="large" color="orange" />
+              </View>
+            )}
+            {!loading && ( 
+            <View style={{flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', marginRight: 5}}>
+                {listRoomSuggest.map((item, index) => 
                   <TouchableOpacity 
-                  key={index}
-                  onPress={() => navigation.navigate('Thông tin phòng')}
-                  >                  
-                    <Image style={{marginTop: 20, height: 100, width: 150, resizeMode: 'contain', borderRadius: 5}} 
-                            source= {{uri: `${item.image}`}} />
+                    key={index}
+                    onPress={() => navigation.navigate('Thông tin phòng', {idRoomSuggest: item._id})}
+                    >              
+                      <Image style={{marginTop: 20, height: 100, width: 150, resizeMode: 'contain', borderRadius: 5}} 
+                              source= {{uri: `${item.img}`}} />  
                       <TouchableOpacity
-                        onPress={() => {                         
-                        }} 
-                        style={{position: 'absolute',right: 12, top: 25,}}>
-                        {
-                          false == false ? <Image key={index} style={{resizeMode:'contain', height: 23, width: 25,}} source={require('./img/heart.png')} />
-                          : 
-                          <Image key={index} style={{resizeMode:'contain' ,height: 23, width: 25, }} source={require('./img/heart_change.png')}/>     
-                        }     
+                          onPress={() => {}} 
+                          style={{position: 'absolute',right: 12, top: 25,}}>
+                          {
+                            false == false ? <Image key={index} style={{resizeMode:'contain', height: 20, width: 20,}} source={require('./img/heart.png')} />
+                            : 
+                            <Image key={index} style={{resizeMode:'contain' ,height: 20, width: 20, }} source={require('./img/heart_change.png')}/>     
+                          }     
                       </TouchableOpacity>    
-                      <View style={{ paddingTop: 5,width: 150}}>             
-                          <Text numberOfLines={1} style={{fontWeight: 'bold', fontSize: 10, color:'gray'}}>{item.type}</Text>
-                          {item.type =='CĂN HỘ STUDIO' ? <Image style={{position: 'absolute', height: 20, width: 40, right: -13, top: 5}} source={item.imageDiscount} /> : <Text style={{position: 'absolute'}}></Text>}        
-                          <Text style={{position: 'absolute', fontFamily: 'Roboto', fontSize: 11, fontWeight: 'bold', color: 'white', height: 20, width: 40, right: -28, top: 5}}>{item.discount}</Text>
-                          <Text numberOfLines={2} style={{ marginLeft: 13, fontWeight: 'bold', fontSize: 13, color: 'black'}}>{item.title}</Text>
-                          <Image style={{position: 'absolute',resizeMode:'contain' , height: 15, width: 35, left:-13, top: 22}} source={item.iconSamset} />
-                          <Text numberOfLines={1} style={{color: '#484848', fontSize: 11}}>{item.note}</Text>
-                          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                      <View style={{ marginTop: 5,width: 150}}> 
+                        <Text numberOfLines={1} style={{fontWeight: 'bold', fontSize: 10, color:'gray'}}>{item.type}</Text>
+                        {(item.type =='CĂN HỘ STUDIO 21m²' || item.type =='CĂN HỘ STUDIO 45m²'|| item.type =='BIỆT THỰ 120m²') 
+                          ? <Image style={{position: 'absolute', height: 30, width: 35, right: 0, resizeMode: 'contain'}} 
+                                 source={{uri : 'https://i.imgur.com/MgnYDVV.png'}} /> 
+                          : <Text style={{position: 'absolute'}}></Text>
+                        } 
+                        {(item.type =='BIỆT THỰ 120m²')?
+                          <Text style={{position: 'absolute', fontFamily: 'Roboto', fontSize: 11, 
+                                fontWeight: 'bold', color: 'white', height: 20, width: 40, right: -20, top: 5}}>8%
+                          </Text>
+                          :
+                          <Text style={{position: 'absolute', fontFamily: 'Roboto', fontSize: 11, 
+                                fontWeight: 'bold', color: 'white', height: 20, width: 40, right: -20, top: 5}}>5%
+                          </Text>
+                        }
+                        <Text numberOfLines={2} style={{marginLeft: 12, marginTop: 5, fontWeight: 'bold', fontSize: 13, color: 'black'}}>{item.nameRoom}</Text>
+                        <Image style={{position: 'absolute',resizeMode:'contain' , height: 15, width: 35, left:-13, top: 27}} 
+                               source={{uri : 'https://i.imgur.com/YgsvlvC.png'}} />
+                        <Text numberOfLines={1} style={{color: '#484848', fontSize: 11, marginLeft: 5}}>
+                          {item.numberPeople} khách • {item.numberBedRoom} phòng ngủ • {item.numberBathRoom} phòng tắm
+                        </Text>
+                        <View style={{flexDirection: 'row', alignItems: 'center', marginLeft: 5, marginTop: 5}}>
                             <Text numberOfLines={1} style={{fontWeight: 'bold', fontSize: 13, color: 'black'}}>
-                              {item.price.priceDiscount.concat(item.price.monetaryUnit)}
+                              {item.priceMon_Fri}đ̲
                             </Text>
-                            <Text numberOfLines={1} style={{textDecorationLine: 'line-through', fontWeight: 'bold', fontSize: 12, color: 'gray', marginLeft: 10}}>
-                              {item.type =='CĂN HỘ STUDIO' ? item.price.priceDefault.concat(item.price.monetaryUnit) : ' '}
-                            </Text>
-                          </View>
-                          <View style={{flexDirection: 'row',marginTop: 5}}>
-                              <Image style={{marginRight:2, resizeMode:'contain', height: 15, width: 15}} source={item.iconStar} />
-                              <Image style={{marginRight:2, resizeMode:'contain', height: 15, width: 15}} source={item.iconStar} />
-                              <Image style={{marginRight:2, resizeMode:'contain', height: 15, width: 15}} source={item.iconStar} />
-                              <Image style={{marginRight:2, resizeMode:'contain', height: 15, width: 15}} source={item.iconStar} />
-                              <Image style={{marginRight:2, resizeMode:'contain', height: 15, width: 15}} source={item.iconStar} />
-                              <Text style={{marginLeft: 10 , fontSize: 11, color: '#484848'}}>{item.numberOfReview}</Text>
-                          </View>
-                      </View>
-                  
+                            {(item.type =='CĂN HỘ STUDIO 21m²' || item.type =='CĂN HỘ STUDIO 45m²'|| item.type =='BIỆT THỰ 120m²')
+                              ?<Text numberOfLines={1} style={{textDecorationLine: 'line-through', fontWeight: 'bold', fontSize: 12, color: 'gray', marginLeft: 10}}>
+                                {item.priceDiscount}đ̲
+                              </Text>
+                              : null}
+                        </View>
+                        <View style={{flexDirection: 'row',marginTop: 5}}>
+                          <Image style={{marginRight:2, resizeMode:'contain', height: 15, width: 15}} source={{uri : 'https://i.imgur.com/uKuzGT8.png'}} />
+                          <Image style={{marginRight:2, resizeMode:'contain', height: 15, width: 15}} source={{uri : 'https://i.imgur.com/uKuzGT8.png'}} />
+                          <Image style={{marginRight:2, resizeMode:'contain', height: 15, width: 15}} source={{uri : 'https://i.imgur.com/uKuzGT8.png'}} />
+                          <Image style={{marginRight:2, resizeMode:'contain', height: 15, width: 15}} source={{uri : 'https://i.imgur.com/uKuzGT8.png'}} />
+                          <Image style={{marginRight:2, resizeMode:'contain', height: 15, width: 15}} source={{uri : 'https://i.imgur.com/uKuzGT8.png'}} />
+                          {(item.type =='BIỆT THỰ 120m²')
+                            ?<Text style={{marginLeft: 10 , fontSize: 11, color: '#484848'}}>7</Text>
+                            :null}
+                          {(item.type =='CĂN HỘ DỊCH VỤ 62m²')?<Text style={{marginLeft: 10 , fontSize: 11, color: '#484848'}}>21</Text> : null}
+                          {(item.type =='CĂN HỘ STUDIO 21m²')?<Text style={{marginLeft: 10 , fontSize: 11, color: '#484848'}}>32</Text> : null}
+                          {(item.type =='CĂN HỘ STUDIO 45m²')?<Text style={{marginLeft: 10 , fontSize: 11, color: '#484848'}}>28</Text> : null}
+                          {(item.type =='CĂN HỘ DỊCH VỤ 35m²')?<Text style={{marginLeft: 10 , fontSize: 11, color: '#484848'}}>45</Text> : null}
+                          
+
+                        </View>
+                      </View> 
                   </TouchableOpacity>
                 )}
             </View>
+            )}
           </View>
           <View style={{height: 200}}></View>
         </View>
@@ -451,44 +355,42 @@ const styles = StyleSheet.create({
       color: 'black',
       fontFamily: 'Roboto',
       fontWeight: 'bold',
-      fontSize: 23,
+      fontSize: 22,
       marginTop: 10,
     },
     search: {
       flexDirection: 'row',
       alignItems: 'center',
-      marginRight: 40,
-      paddingLeft: 20,
-      paddingRight: 40,
-      paddingVertical: 5,
-      borderRaidius: 15,
-      borderColor: '#C8C8C8',
-      shadowColor: "#B8B8B8",
+      width: '80%',
+      borderColor: 'gray',
+      //backgroundColor: 'pink',
+      shadowColor: "gray",
       shadowOffset: {
         width: 0,
         height: 1,
       },
-      shadowOpacity: 1.1,
-      shadowRadius: 6,
-      elevation: 5,
+      shadowOpacity: 0.22,
+      shadowRadius: 2.22,
 
+      elevation: 3,
     },
 
     imgIc_search: {
-   
       // aspectRatio: 0.3  , 
       width: 24,
       height: 24,
       resizeMode: 'contain',
       tintColor: '#D3D3D3',
-
+      marginLeft: 20,
     },
 
     findInput:{
+      paddingVertical: 17,
       fontFamily: 'Roboto',
       marginLeft: 20,
       fontWeight: 'bold',
       fontSize: 14.5,
+      color: 'gray',
     },
 
     location: {

@@ -1,15 +1,13 @@
-import { Dimensions, Image, ScrollView, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View, Modal, TextInput, Switch} from 'react-native'
-import React, { useState } from 'react'
+import { Dimensions, Image, ScrollView, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View, Modal, TextInput, Switch, ActivityIndicator} from 'react-native'
+import React, { useEffect, useState } from 'react'
 import DatePicker from 'react-native-date-picker'
 import { set } from 'date-fns/esm';
 import CountryPicker from 'react-native-country-picker-modal'
 import LinearGradient from 'react-native-linear-gradient'
-
-
+import axios from 'axios';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-
 
 const CheckIn = ({ navigation , route}) => {
 
@@ -22,13 +20,30 @@ const CheckIn = ({ navigation , route}) => {
   const [callingCode, setcountryCode] = useState('84');
   const [hideSwitch, sethideSwitch] = useState(false);
   const [modalAccess, setmodalAccess] = useState(false);
-  const toggleSwitch = () => sethideSwitch(previousState => !previousState);
-  
-
 
   const [numberOfPeople, setnumberOfPeople] = useState(1)
   const [numberOfChildren, setnumberOfChildren] = useState(0)
   const [numberOfInfant, setnumberOfInfant] = useState(0)
+
+  const [infoRoomOder, setInfoRoomOder] = useState([])
+  const [loading, setLoading] = useState(true);
+
+  const idRoomOder = route.params.idRoomOder;
+  
+  
+  useEffect(() => {
+    const fetchData = async () =>{
+      setLoading(true);
+      try {
+        const {data: response} = await axios.get(`http:///192.168.1.3:3000/list-hotel?hotelID=${idRoomOder}`);
+        setInfoRoomOder(response);
+      } catch (error) {
+        console.error(error.message);
+      }
+      setLoading(false);
+    }
+    fetchData();
+  }, []);
 
   const checkNumberPeople =(number) =>{
     if(number > 1){
@@ -42,14 +57,6 @@ const CheckIn = ({ navigation , route}) => {
     return 0;
   }
   
-
- /*  console.log(number1)
-  console.log(number2) */
- /*  console.log(number1)
-  console.log(number2) */
-
- /*  let getDay = date.getDay()
-  let getDayReturn = dateReturn.getDay() */
 
   function changeDay(change){
     if(change ===1 ){
@@ -77,10 +84,31 @@ const CheckIn = ({ navigation , route}) => {
   const getDay = changeDay(date.getDay());
   const getDayReturn = changeDay(dateReturn.getDay());
 
-  const name = route.params.nameRoom;
-  
+  const toggleSwitch = () => sethideSwitch(previousState => !previousState);
+
+  const dateOder = {
+    getDay : getDay,                                                                             
+
+
+    getDate : date.getDate(),
+
+
+    getMonth : date.getMonth(),
+
+
+    getYear : date.getFullYear(),
+  }
+  const dateReturnOder = {
+      getDayReturn : getDayReturn,                                                                             
+
+      getDateReturn : dateReturn.getDate(),
+
+      getMonthReturn : dateReturn.getMonth(),
+
+      getYearReturn : dateReturn.getFullYear(),
+  } 
   return (
-    
+   
     <View style={{}}>
       {/* Tab Top */}
         <View
@@ -101,20 +129,27 @@ const CheckIn = ({ navigation , route}) => {
         </View>
 
         {/* InfoRoom */}
+        {loading && (
+              <View style={{justifyContent: 'center', marginTop: 30, flexDirection: 'row'}}>
+              <Text style={{color: 'black', marginTop: 10}}>Loading...</Text>
+              <ActivityIndicator size="large" color="orange" />
+              </View>
+        )}
+        {!loading && ( 
         <ScrollView style={{backgroundColor: '#F8F9F9'}}>
           <View style={{marginTop: 20, marginLeft: 20, marginRight: 20,}}>
             <Image 
               style={{ resizeMode: 'cover', width: 80, height : 80, borderRadius: 7}} 
-              source={{uri: `${route.params.imgRoom}`}} />
+              source={{uri: infoRoomOder.img}} />
             <Text numberOfLines={1} style={{position: 'absolute', left: 90, fontWeight: 'bold', fontSize: 15, color: 'black', width: windowWidth - 130}}>
-              {route.params.nameRoom}
+              {infoRoomOder.nameRoom}
             </Text>
             <View style={{position: 'absolute', left: 90,}}>
               <Text style={{top: 25, fontSize: 13, color: 'gray' }}>
-                {route.params.numberPerson} khách • {route.params.numberBedRoom} phòng ngủ • {route.params.numberBathRoom} phòng tắm
+                {infoRoomOder.numberPeople} khách • {infoRoomOder.numberBedRoom}phòng ngủ • {infoRoomOder.numberBathRoom}phòng tắm
               </Text>
               <Text style={{top: 30, fontSize: 12, color: 'gray'}}>
-                {route.params.locationRoom}
+                {infoRoomOder.detailLocation}
               </Text>
             </View>
 
@@ -123,7 +158,7 @@ const CheckIn = ({ navigation , route}) => {
              <Text style={{color:'black', fontWeight: 'bold', marginLeft: 20, marginTop: 10}}>Ngày đặt phòng</Text>
              <TouchableOpacity style={{height: 35, width: 250, marginTop: 10, borderRadius: 7, flexDirection: 'row', alignItems: 'center',
                                backgroundColor:'#EBF5FF',marginLeft: 10,}}
-                               onPress ={() => setModalVisible(true) }>
+                               onPress ={() => setModalVisible(true)}>
                 <Text style={{color:'black', marginLeft:10, fontSize:13}}>{getDay} , </Text>
                 <Text style={{color:'black', marginLeft:2, fontSize:13}}>{date.getDate()}-{date.getMonth()+1}-{date.getFullYear()}</Text>
                 <Image source={{uri: 'https://i.imgur.com/qdSigYs.png'}} 
@@ -148,7 +183,7 @@ const CheckIn = ({ navigation , route}) => {
                   <TouchableOpacity style={{height: 35, width: 250, marginTop: 10, borderRadius: 7, 
                                     backgroundColor:'#EBF5FF',}}
                                     onPress ={() => {
-                                      setModalVisible2(!modalVisible2) 
+                                      setModalVisible2(!modalVisible2);
                                     }}> 
                       <View style={{flexDirection: 'row',height: 35, alignItems: 'center'}}>
                         <Text style={{color:'black', marginLeft:10, fontSize:13}}>{getDayReturn} , </Text>
@@ -160,7 +195,10 @@ const CheckIn = ({ navigation , route}) => {
                   <Text style={{color: 'gray', textAlign: 'center', fontSize:11}}>Ngày đi 12:00 pm</Text>
                   </View>
                   :
-                  <Text style={{color:'black', marginLeft:10, fontSize:13, marginTop: 10}}>Liên hệ quầy lễ tân để trả phòng</Text>
+                  <View>
+                    <Text style={{color:'black', marginLeft:10, fontSize:13, marginTop: 10}}>Liên hệ quầy lễ tân để trả phòng</Text>
+                  </View>
+                  
               }
               </View>
             </View>
@@ -190,7 +228,6 @@ const CheckIn = ({ navigation , route}) => {
                         <Image source={{uri: 'https://i.imgur.com/dIsk0MM.png'}}
                               style={{resizeMode: 'contain', width: 15, height: 15, }} 
                               />
-                        
                       </TouchableOpacity>
                   </View>
                   
@@ -204,7 +241,7 @@ const CheckIn = ({ navigation , route}) => {
               onRequestClose={() => setModalVisible2(!modalVisible2)}
               >
                 <View style={{overflow: 'hidden'}}>
-                  <View style={{ borderTopWidth: 1.5, borderTopColor: '#DCDCDC',
+                  <View style={{ borderTopWidth: 1.5, borderTopColor: '#DCDCDC', backgroundColor: 'white',
                                  height: 200, marginTop: windowHeight-200, alignItems: 'center' }}>
       
                       <DatePicker 
@@ -383,7 +420,8 @@ const CheckIn = ({ navigation , route}) => {
 
 
         <TouchableOpacity
-          onPress={() => setmodalAccess(true)}>
+          onPress={() => {setmodalAccess(true)
+                          }}>
           <LinearGradient
               colors={['#F08080', '#FF6347', '#FF4500']}
               start={{x: 0, y: 0.5}}
@@ -403,32 +441,35 @@ const CheckIn = ({ navigation , route}) => {
               onRequestClose={() => setmodalAccess(!modalAccess)}
               >
                 <View style={{overflow: 'hidden'}}>
-                  <View style={{ borderTopWidth: 1.5, borderTopColor: '#DCDCDC', backgroundColor: 'white',
-                                 height: windowHeight, marginTop: 0, alignItems: 'center' }}>
+                  <View style={{ backgroundColor: '#F5F5F5', borderWidth: 1.5, borderColor: '#DCDCDC', borderRadius: 10, 
+                                 marginHorizontal: 10, height: windowHeight/2, marginTop: windowHeight/3.5, alignItems: 'center' }}>
       
                      
-                       <TouchableOpacity style={{position: 'absolute', right: 15,top: 10}}
+                       <TouchableOpacity style={{position: 'absolute', right: 20,top: 10}}
                                         onPress={() => {setmodalAccess(!modalAccess)}}>
                         <Image source={{uri: 'https://i.imgur.com/dIsk0MM.png'}}
                               style={{resizeMode: 'contain', width: 15, height: 15, }} 
                               />
                       </TouchableOpacity>
 
-                      <Text style={{color: 'black', marginTop: 100, fontSize: 20, fontWeight: 'bold', color: '#FF4500'}}>Đặt phòng thành công!</Text>
+                      <Text style={{color: 'black', marginTop: 30, fontSize: 20, fontWeight: 'bold', color: '#FF4500'}}>Đặt phòng thành công!</Text>
                       <Text style={{color: 'black', marginTop: 10,fontSize: 16, fontWeight: 'bold', color: '#FF4500'}}>Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi</Text>
                       <Image source={{uri: 'https://i.imgur.com/s1Cyoz4.png'}} 
-                             style={{resizeMode: 'contain', width: 150, height: 150, marginTop: 20}}
+                             style={{resizeMode: 'contain', width: 150, height: 150, marginTop: 10}}
                       />
                       <TouchableOpacity style={{}}
                                         onPress={() => navigation.navigate('Đặt chỗ của tôi', {
-                                                                            nameRoomOder : name,
-                                        })}>
+                                                                                               infoRoomOder,
+                                                                                               dateOder,
+                                                                                               dateReturnOder,
+                                                                                              })}>
                         <LinearGradient
                           colors={['#F08080', '#FF6347', '#FF4500']}
                           start={{x: 0, y: 0.5}}
                           end={{x: 1, y: 1}}
                           
-                          style={{alignItems: 'center', marginHorizontal: 20, paddingVertical: 10, paddingHorizontal: 20, borderRadius: 10, marginTop: 50}}>
+                          style={{alignItems: 'center', marginHorizontal: 20, paddingVertical: 10, 
+                                  paddingHorizontal: 20, borderRadius: 10, marginTop: 20,}}>
                           <Text style={{ fontSize: 15, fontWeight:'bold', color: 'white', paddingHorizontal: 20, paddingVertical: 0}}
                             >Xem phòng đã đặt</Text>
                         </LinearGradient>      
@@ -444,7 +485,8 @@ const CheckIn = ({ navigation , route}) => {
           <View style={{height: 200}}></View>
           
         </ScrollView>
-
+        )}
+  
     </View>
   )
 }

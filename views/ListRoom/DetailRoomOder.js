@@ -1,4 +1,4 @@
-import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Dimensions } from 'react-native';
 import axios from 'axios';
@@ -7,7 +7,7 @@ import LinearGradient from 'react-native-linear-gradient';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const InfoRoom = ({navigation, route}) => {
+const DetailRoomOder = ({navigation, route}) => {
     const [styleText, setstyleText] = useState(0)
     const [hideText, sethideText] = useState(false)
     const [changeColor, setchangeColor] = useState(false)
@@ -22,7 +22,7 @@ const InfoRoom = ({navigation, route}) => {
         const fetchData = async () =>{
           setLoading(true);
           try {
-            const {data: response} = await axios.get(`http:/192.168.1.3:3000/list-hotel?hotelID=${idRoomSuggest}`);
+            const {data: response} = await axios.get(`http://192.168.1.3:3000/list-hotel?hotelID=${idRoomSuggest}`);
             setDetailRoom(response);
           } catch (error) {
             console.error(error.message);
@@ -51,7 +51,7 @@ const InfoRoom = ({navigation, route}) => {
      <View style={{}}>
          {/* Tab Top */}
          <View 
-          style={{backgroundColor: '#F8F8F8',height: 50, width: '100%', flexDirection: 'row',
+          style={{backgroundColor: '#F8F8F8',height: 45, width: '100%', flexDirection: 'row',
                  alignItems: 'center' , borderBottomColor: '#DCDCDC', borderBottomWidth: 1,}}>
             <TouchableOpacity style={{marginLeft: -5, paddingVertical: 10, paddingHorizontal: 20}}
                               onPress={() => navigation.goBack()}>
@@ -60,35 +60,11 @@ const InfoRoom = ({navigation, route}) => {
                     source= {{uri: 'https://img.icons8.com/material/344/back--v1.png'}}
                 />
             </TouchableOpacity>
-            <TouchableOpacity  style={{marginLeft: 180,}}>
-                <Image 
-                    style={{resizeMode: 'contain', width: 30, height: 30, tintColor: '#484848',}} 
-                    source= {{uri: 'https://img.icons8.com/material/344/share-rounded.png'}} 
-                />
-            </TouchableOpacity>
-            <TouchableOpacity style={{marginLeft: 30,}}
-                              onPress ={() => {
-                              setchangeColor(!changeColor)
-                              }}>
-                {changeColor ? 
-                    <Image 
-                     style={{resizeMode: 'contain', width: 32, height: 32, tintColor: '#FF4500'}} 
-                     source= {{uri:'https://i.imgur.com/nqv7cS5.png'}} /> 
-                    :
-                    <Image 
-                    style={{resizeMode: 'contain', width: 30, height: 30, tintColor: '#484848'}} 
-                    source= {{uri:'https://img.icons8.com/metro/72/like.png'}} /> 
-                }
-            </TouchableOpacity>
+            
          </View>
 
         <ScrollView style={{ backgroundColor: '#F9F9F9'}}>
-            {loading && (
-              <View style={{justifyContent: 'center', marginTop: 30, flexDirection: 'row'}}>
-              <Text style={{color: 'black', marginTop: 10}}>Loading...</Text>
-              <ActivityIndicator size="large" color="orange" />
-              </View>
-            )}
+            {loading && <Text style={{color: 'black'}}>Loading</Text>}
             {!loading && ( 
             <View>
                 <Image source={{uri: detailRoom.img}}
@@ -321,29 +297,13 @@ const InfoRoom = ({navigation, route}) => {
        {/*  Tab Bottom */}
          <View style={{ position: 'absolute', height: 90, left: 0, top: windowHeight - 90, width: windowWidth,
                         borderTopWidth: 1.5, borderTopColor: '#DCDCDC', backgroundColor: 'white', }}>
-            <View style={{ flexDirection: 'row', marginTop: 10, alignItems: 'center', justifyContent: 'space-between', marginHorizontal: 20}}>
+            <View style={{ flexDirection: 'row', marginTop: 10, alignItems: 'center', marginHorizontal: 20}}>
                 <View style={{flexDirection: 'row', alignItems: 'center',}}>
                     <Text style={{fontFamily: 'Roboto', fontSize: 20, fontWeight: 'bold', color: 'black', marginTop: 8
                         }}>{detailRoom.priceMon_Fri}đ̲</Text>
                     <Text style={{fontFamily: 'Roboto', marginTop: 13, color: 'gray' }}>x 1 đêm</Text>
                 </View>
  
-                <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', }}
-                                onPress ={() => navigation.navigate('Đặt phòng', {idRoomOder : idRoomSuggest})}>  
-                    <LinearGradient
-                    colors={['#FF4500', '#FF6347', '#FF8C00']}
-                    start={{x: 0, y: 0.5}}
-                    end={{x: 1, y: 1}}
-                    style={{alignItems: 'center', paddingVertical: 10, paddingHorizontal: 10, borderRadius: 10, flexDirection: 'row'}}
-                    >
-                    <Image 
-                    source={{uri: 'https://i.imgur.com/KFwOsZ6.png'}}  
-                    style={{resizeMode: 'contain', height: 20, width: 20}}
-                    />
-                    <Text style={{ fontFamily: 'Roboto', fontWeight: 'bold', color:'black', fontSize: 14, marginLeft: 10}}>
-                        Đặt phòng nhanh</Text>
-                    </LinearGradient>
-                </TouchableOpacity>
             </View>
          </View>
 
@@ -351,6 +311,6 @@ const InfoRoom = ({navigation, route}) => {
    )
 }
 
-export default InfoRoom
+export default DetailRoomOder
 
 const styles = StyleSheet.create({})
