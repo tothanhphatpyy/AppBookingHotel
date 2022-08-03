@@ -1,7 +1,9 @@
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, SafeAreaView, ScrollView, StatusBar, Alert, TouchableHighlight, ActivityIndicator, ActivityIndicatorComponent} from 'react-native'
-import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, ScrollView, StatusBar, TouchableHighlight, ActivityIndicator, } from 'react-native'
+import React, { useEffect, useState, useContext, useRef } from 'react';
 import axios from 'axios';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Animatable from 'react-native-animatable';
+import { AuthContext } from '../../Context/AuthContext';
 
 
 const Home_Tab = ( {navigation} ) => {
@@ -10,6 +12,11 @@ const Home_Tab = ( {navigation} ) => {
   const [listLocation, setListLocation] = useState([]);
   const [listRoomSuggest, setListRoomSuggest] = useState([]);
   const [loading, setLoading] = useState(true);
+  
+  const { userToken, userInfo} = useContext(AuthContext);
+
+  const setNameUser = useRef(userInfo.name.split(" "))
+
 
   useEffect(() => {
     const fetchData = async () =>{
@@ -55,40 +62,40 @@ const Home_Tab = ( {navigation} ) => {
   const listVoucher =[
     {
       name: 'Momo',
-      image: require('./img/VoucherMoMo.jpg')
+      image: 'https://i.imgur.com/TIM5KjW.jpg'
     },
 
     {
       name: 'Zalo',
-      image: require('./img/VoucherZalo.png')
+      image: 'https://i.imgur.com/YmDUI99.png'
     },
 
     {
       name: 'Airpay',
-      image: require('./img/VoucherAirpay.jpg')
+      image: 'https://i.imgur.com/rdlcqoI.jpg'
     },
   ];
   const listLocationSuggest =[
     {
-      image: require('./img/homestay1.jpg'),
+      image: 'https://i.imgur.com/paj3fJE.jpg',
       title: 'Vi vu ngoại thành Hà Nội',
       note: 'Trải nghiệm không gian thoáng đãng cho chuyến đi ngay gần Hà Nội',
     },
 
     {
-      image: require('./img/homestay2.jpg'),
+      image: 'https://i.imgur.com/rvVeD0J.jpg',
       title: 'Vũng Tàu Biệt thự hồ bơi',
       note: 'Những biệt thự có hồ bơi dành cho kỳ nghỉ của bạn tại Vũng Tàu',
     },
 
     {
-      image: require('./img/homestay3.jpg'),
+      image: 'https://i.imgur.com/KHhs6cm.jpg',
       title: 'Sài gòn cần là có ngay',
       note: 'Những căn homestay có 01 phòng ngủ tại Sài Gòn có thể đặt nhanh chóng',
     },
 
     {
-      image: require('./img/homestay4.jpg'),
+      image: 'https://i.imgur.com/Y2dARDm.jpg',
       title: 'Bể bơi & BBQ',
       note: 'Trải nghiệm đẳng cấp tại những căn homestay có bể bơi đẹp và khu vực BBQ ấm cúng',
     }
@@ -101,36 +108,46 @@ const Home_Tab = ( {navigation} ) => {
         animated={true}
         backgroundColor="black" />
       <ScrollView style={styles.scrollView}>
-        <View>
-          <Image
+        <Image
             style= {styles.imgLogo}
-            source = {require('./img/logo.png')}
-          />
-              <Text style={styles.textAnswer}>Bạn muốn đi đâu?</Text>
-        </View>
+            source = {{uri: 'https://i.imgur.com/T6eMqr7.png'}}
+        />
+        <View>
+          <Text style={styles.textAnswer}>Bạn muốn đi đâu, {setNameUser.current[setNameUser.current.length -1]} ?</Text>
+        
         <TouchableOpacity style={styles.search}>
           <Image
               style= {styles.imgIc_search}
-              source = {require('./img/ic_search.png')}    
+              source = {{uri: 'https://i.imgur.com/kUTuRfi.png'}}  
           />
           <Text style={styles.findInput}>Thử tìm kiếm Hà Nội</Text>
         </TouchableOpacity>
+        </View>
+
         {/* location */}
-        <ScrollView style={styles.location} 
-          horizontal 
-          showsHorizontalScrollIndicator={false}>
-            {listLocation.map((item, index) => 
-                <TouchableOpacity key={index} style={{ alignItems: 'center', paddingRight: 25}} 
-                                  onPress={() => navigation.navigate('Danh sách phòng', {idLocation : item._id, nameLocation: item.name})}>
-                  <Image 
-                    style={styles.itemImage}
-                    source={{uri: item.image}} />
-                  <Text
-                    numberOfLines={1} 
-                    style={{marginTop: 10, color: 'black', fontSize : 12, fontWeight : '500'}}>{item.name.length > 9 ? `${item.name.slice(0,10)}...` : item.name}</Text>
-                </TouchableOpacity>
-            )} 
-        </ScrollView>
+        <View>
+          {loading && (
+              <View style={{justifyContent: 'center', marginTop: 30, flexDirection: 'row'}}>
+              <Text style={{color: 'black', marginTop: 10}}>Loading...</Text>
+              <ActivityIndicator size="small" color="orange" />
+              </View>
+          )}
+          <ScrollView style={styles.location} 
+            horizontal 
+            showsHorizontalScrollIndicator={false}>
+              {listLocation.map((item, index) => 
+                  <TouchableOpacity key={index} style={{ alignItems: 'center', paddingRight: 25}} 
+                                    onPress={() => navigation.navigate('AppScreen', {screen: 'Danh sách phòng', params: {idLocation : item._id, nameLocation: item.name}})}>
+                    <Image 
+                      style={styles.itemImage}
+                      source={{uri: item.image}} />
+                    <Text
+                      numberOfLines={1} 
+                      style={{marginTop: 10, color: 'black', fontSize : 12, fontWeight : '500'}}>{item.name.length > 9 ? `${item.name.slice(0,10)}...` : item.name}</Text>
+                  </TouchableOpacity>
+              )} 
+          </ScrollView>
+        </View>
 
         {/* Service */}
         <ScrollView 
@@ -183,8 +200,8 @@ const Home_Tab = ( {navigation} ) => {
             showsHorizontalScrollIndicator={false}>
             {listVoucher.map((item, index) => 
             <TouchableOpacity key={index}
-                              onPress={() => navigation.navigate('Voucher')}>
-              <Image key={index} style={{flex: 1,resizeMode: 'contain', height: 160, width: 320, borderRadius: 10, marginRight: 10 }}  source={item.image} />
+                              onPress={() => navigation.navigate('AppScreen', {screen : 'Voucher'})}>
+              <Image key={index} style={{flex: 1,resizeMode: 'contain', height: 160, width: 320, borderRadius: 10, marginRight: 10 }}  source={{uri : item.image}} />
             </TouchableOpacity>
                 
             )}
@@ -205,7 +222,7 @@ const Home_Tab = ( {navigation} ) => {
                 style={{marginTop: 20, marginRight: 10,elevation: 1.5, }}>
               <Image 
                   style={{resizeMode: 'contain', height: 200, width: 310, borderTopLeftRadius: 10,borderTopRightRadius: 10 }}
-                  source={item.image} />
+                  source={{uri : item.image}} />
               <View style={{ marginLeft: 20}}>
                 <Text style={{marginTop: 8,fontWeight: 'bold', color: 'black', fontSize: 17}}>{item.title}</Text>
                 <Text style={{marginTop: 2,color: '#484848', maxWidth: 280}}>{item.note}</Text>
@@ -258,7 +275,7 @@ const Home_Tab = ( {navigation} ) => {
                 {listRoomSuggest.map((item, index) => 
                   <TouchableOpacity 
                     key={index}
-                    onPress={() => navigation.navigate('Thông tin phòng', {idRoomSuggest: item._id})}
+                    onPress={() => navigation.navigate('AppScreen', {screen: 'Thông tin phòng', params: {idRoomSuggest: item._id}})}
                     >              
                       <Image style={{marginTop: 20, height: 100, width: 150, resizeMode: 'contain', borderRadius: 5}} 
                               source= {{uri: `${item.img}`}} />  
@@ -266,9 +283,9 @@ const Home_Tab = ( {navigation} ) => {
                           onPress={() => {}} 
                           style={{position: 'absolute',right: 12, top: 25,}}>
                           {
-                            false == false ? <Image key={index} style={{resizeMode:'contain', height: 20, width: 20,}} source={require('./img/heart.png')} />
+                            false == false ? <Image key={index} style={{resizeMode:'contain', height: 20, width: 20,}} source={{uri : 'https://i.imgur.com/bwCX5QJ.png'}} />
                             : 
-                            <Image key={index} style={{resizeMode:'contain' ,height: 20, width: 20, }} source={require('./img/heart_change.png')}/>     
+                            <Image key={index} style={{resizeMode:'contain' ,height: 20, width: 20, }} source={{uri: 'https://i.imgur.com/ROwUrG2.png'}}/>     
                           }     
                       </TouchableOpacity>    
                       <View style={{ marginTop: 5,width: 150}}> 

@@ -6,7 +6,7 @@ const RegistrationInfoUser = ({ navigation }) => {
         <View style= {styles.container}>
         <Image
           style={styles.logoImage}
-          source={require("./img/logo.png")}
+          source={{uri :'https://i.imgur.com/T6eMqr7.png'}}
        />
     
     
@@ -32,8 +32,8 @@ const RegistrationInfoUser = ({ navigation }) => {
            />
 
 
-           <Text style= {styles.textPhone}>Mật khẩu</Text>
-           <TextInput
+          <Text style= {styles.textPhone}>Mật khẩu</Text>
+          <TextInput
             style={styles.inputPhone}
             
             placeholderTextColor={'gray'}
@@ -41,15 +41,15 @@ const RegistrationInfoUser = ({ navigation }) => {
             keyboardType="numeric"
             maxLength={6}
             secureTextEntry={true}
-           />
+          />
 
-            <Image
-              style={styles.imgVector}
-              source={require("./img/Vector.png")}
-            />
+          <Image
+            style={styles.imgVector}
+            source={{uri :'https://i.imgur.com/0w1ygCJ.png'}}
+          />
 
-           <Text style= {styles.textPhone2}>Nhập lại mật khẩu</Text>
-           <TextInput
+          <Text style= {styles.textPhone2}>Nhập lại mật khẩu</Text>
+          <TextInput
             style={styles.inputPhone}
             
             placeholderTextColor={'gray'}
@@ -57,17 +57,17 @@ const RegistrationInfoUser = ({ navigation }) => {
             keyboardType="numeric"
             maxLength={6}
             secureTextEntry={true}
-           />
+          />
 
-            <Image
+          <Image
               style={styles.imgVector}
-              source={require("./img/Vector.png")}
-            />
-              <TouchableOpacity>
-                <Text style= {styles.btnRegis}
-                      onPress ={ () => navigation.navigate('Màn hình chính')}
-                >ĐĂNG KÝ</Text>
-              </TouchableOpacity>      
+              source={{uri : 'https://i.imgur.com/0w1ygCJ.png'}}
+          />
+            <TouchableOpacity>
+              <Text style= {styles.btnRegis}
+                    onPress ={ () => navigation.navigate('TabScreen')}
+              >ĐĂNG KÝ</Text>
+            </TouchableOpacity>      
           </View>
       </View>
       </View>
@@ -125,7 +125,6 @@ const styles = StyleSheet.create({
     },
     
     imgVector :{
-  
       marginTop: '-7%',
       marginLeft: '80%',
       resizeMode: 'contain',
@@ -141,7 +140,7 @@ const styles = StyleSheet.create({
     },
     btnRegis: {
       marginHorizontal: '10%',
-      marginTop : '8%',
+      marginTop : '15%',
       fontSize: 16,
       fontWeight: 'bold',
       textAlign: 'center',

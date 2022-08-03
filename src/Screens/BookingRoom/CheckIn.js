@@ -1,7 +1,6 @@
 import { Dimensions, Image, ScrollView, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View, Modal, TextInput, Switch, ActivityIndicator} from 'react-native'
 import React, { useEffect, useState } from 'react'
 import DatePicker from 'react-native-date-picker'
-import { set } from 'date-fns/esm';
 import CountryPicker from 'react-native-country-picker-modal'
 import LinearGradient from 'react-native-linear-gradient'
 import axios from 'axios';
@@ -58,7 +57,7 @@ const CheckIn = ({ navigation , route}) => {
   }
   
 
-  function changeDay(change){
+  const changeDay =(change) =>{
     if(change ===1 ){
       return change = 'Thứ Hai'
     }
@@ -88,23 +87,14 @@ const CheckIn = ({ navigation , route}) => {
 
   const dateOder = {
     getDay : getDay,                                                                             
-
-
     getDate : date.getDate(),
-
-
     getMonth : date.getMonth(),
-
-
     getYear : date.getFullYear(),
   }
   const dateReturnOder = {
       getDayReturn : getDayReturn,                                                                             
-
       getDateReturn : dateReturn.getDate(),
-
       getMonthReturn : dateReturn.getMonth(),
-
       getYearReturn : dateReturn.getFullYear(),
   } 
   return (

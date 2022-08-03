@@ -1,60 +1,90 @@
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Modal, Dimensions } from 'react-native'
-import React, {useState} from 'react'
-
+import React, {useContext, useEffect, useState} from 'react'
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Animatable from 'react-native-animatable';
+import { AuthContext } from '../../Context/AuthContext';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const Login = ({ navigation }) => {
-  const [userName, setUserName] = useState();
-  const [passWord, setPassWord] = useState();
+
+  const [userName, setUserName] = useState('');
+  const [passWord, setPassWord] = useState('');
   const [hide, setHide] = useState(false);
   const [modalAccess, setModalAccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const checkAccount = () => {
-    console.log(!userName);
-    if( userName == '0869017747' || userName == '123' && passWord == '123456'){
-      navigation.navigate('Màn hình chính');
-    }
+  const {login} = useContext(AuthContext);
+
+
+  const handleLogin = () => {
+    if(userName== '' || passWord == '' || passWord.length !==6)
+      setModalAccess(!modalAccess);
     else{
-      setModalAccess(!modalAccess)
+      const fetchData = async () =>{
+        setIsLoading(true);
+        try {
+          const {data : response} = await axios.post(`http://192.168.1.3:3000/login`, {
+             username: userName,
+             password: passWord,
+          });
+          if (response.message =='Tài khoản không tồn tại') {
+            console.log('Tài khoản không tồn tại');
+            setIsLoading(false);
+          } 
+          if (response.message =='Sai mật khẩu') {
+            console.log('Sai mật khẩu');
+            setIsLoading(false);
+          } 
+          else {
+            console.log(response);
+            AsyncStorage.setItem('userID', response._id);
+            AsyncStorage.setItem('username', response.username);
+            AsyncStorage.setItem('role', response.role.toString());
+            navigation.navigate('Tabs');
+          }
+  
+        } catch (error) {
+          console.log('Loi');
+          setIsLoading(false);
+        }
+      }
+      fetchData();
     }
   }
 
-
-
   return (
     <View style= {styles.container}>
-         <Image
-           style={styles.logoImage}
-           source={require("./img/logo.png")}
-        />
-
-
-       <View style = {styles.formLogin}>
-           <Text style= {styles.textLogin}>Đăng Nhập</Text>
-           
-
+      <Animatable.Image
+        animation="fadeInDown"
+        style={styles.logoImage}
+        source={{uri : 'https://i.imgur.com/T6eMqr7.png'}}
+      />
+      <Animatable.View style={styles.formLogin} animation="fadeInUpBig">
+        <Text style= {styles.textLogin}>Đăng Nhập</Text>
         <View style = {styles.LoginInput}>
-           <Text style= {styles.textPhone}>Số điện thoại</Text>
-           <TextInput
-            style={styles.inputPhone}
-            onChangeText={setUserName}
-            placeholderTextColor={'gray'}
-            placeholder="Nhập số điện thoại của bạn"
-            keyboardType="numeric"
-           />
+          <Text style= {styles.textPhone}>Số điện thoại</Text>
+          <TextInput
+          value={userName}
+          style={styles.inputPhone}
+          onChangeText={setUserName}
+          placeholderTextColor={'gray'}
+          placeholder="Nhập số điện thoại của bạn"
+          keyboardType="numeric"
+          />
 
-           <Text style= {styles.textPassword}>Mật khẩu</Text>
-           <TextInput
-            style={styles.inputPhone}
-            onChangeText={setPassWord}
-            placeholderTextColor={'gray'}
-            placeholder="Nhập mật khẩu 1-6"
-            keyboardType="numeric"
-            maxLength={6}
-            secureTextEntry={!hide}
-           />
+          <Text style= {styles.textPassword}>Mật khẩu</Text>
+          <TextInput
+          style={styles.inputPhone}
+          onChangeText={setPassWord}
+          placeholderTextColor={'gray'}
+          placeholder="Nhập mật khẩu 1-6"
+          keyboardType="numeric"
+          maxLength={6}
+          secureTextEntry={!hide}
+          />
 
           <TouchableOpacity style={{ marginTop: '-7%', marginLeft: '80%',}}
                             onPress={() => setHide(!hide)}>
@@ -73,71 +103,61 @@ const Login = ({ navigation }) => {
           </TouchableOpacity>
             
 
-            <TouchableOpacity>
-              <Text style= {styles.textForgot}>Quên mật khẩu?</Text>
-            </TouchableOpacity>
+          <TouchableOpacity>
+            <Text style= {styles.textForgot}>Quên mật khẩu?</Text>
+          </TouchableOpacity>
             
 
-            <TouchableOpacity>
-              <Text style= {styles.btnLogin}
-                onPress = {() => checkAccount()}
-              >ĐĂNG NHẬP</Text>
-            </TouchableOpacity>
+          <TouchableOpacity>
+            <Text style= {styles.btnLogin}
+              onPress = {() => login(userName, passWord)}
+            >ĐĂNG NHẬP</Text>
+          </TouchableOpacity>
             
 
-            <View style ={styles.textSignin}>
-                <Text style= {styles.textAnswer}>Bạn chưa có tài khoản?</Text>
-                <TouchableOpacity>
-                  <Text 
-                  style= {styles.textSignnow}
-                  onPress = {() => navigation.navigate('Đăng kí SĐT') }
-                  >Đăng kí ngay</Text>
-                </TouchableOpacity>     
-            </View>
+          <View style ={styles.textSignin}>
+              <Text style= {styles.textAnswer}>Bạn chưa có tài khoản?</Text>
+              <TouchableOpacity>
+                <Text 
+                style= {styles.textSignnow}
+                onPress = {() => navigation.navigate('Đăng kí SĐT') }
+                >Đăng kí ngay</Text>
+              </TouchableOpacity>     
+          </View>
 
-            <View style ={styles.textotherLogin}>
-                <Text style= {styles.textAnswer2}>Hoặc đăng nhập bằng</Text>
-            </View>
+          <View style ={styles.textotherLogin}>
+              <Text style= {styles.textAnswer2}>Hoặc đăng nhập bằng</Text>
+          </View>
 
             <View style ={styles.logoLoginOther}>
-             
-             
-                <View style= {styles.img}>
-                  <TouchableOpacity>
-                      <Image
-                        style={styles.imgApple}
-                        source={require("./img/logoApple.png")}
-                      />
+              <View style= {styles.img}>
+                <TouchableOpacity>
+                  <Image
+                    style={{resizeMode: 'contain', height: 35, width: 35}}
+                    source={{uri : 'https://i.imgur.com/k9Oo1CW.png'}} //logo Apple
+                  />
+                </TouchableOpacity>
+              </View>
+              <View style= {[styles.img,styles.imgGG]}>
+                <TouchableOpacity>
+                  <Image
+                      style={{resizeMode: 'contain', height: 35, width: 35}}
+                      source={{uri : 'https://i.imgur.com/4JYzqQD.png'}} //logo Google
+                    />
                   </TouchableOpacity>
-                </View>
-               
-                
-                <View style= {[styles.img,styles.imgGG]}>
-                  <TouchableOpacity>
-                    <Image
-                        style={styles.imglogoGG}
-                        source={require("./img/logoGG.png")}
-                      />
-                    </TouchableOpacity>
-                </View>
+              </View>
 
-                <View style= {[styles.img,styles.imgGG]}>
-                  <TouchableOpacity>
-                    <Image
-                        style={styles.imglogoFB}
-                        source={require("./img/logoFB.png")}
-                      />
-                  </TouchableOpacity>
-                  
-                </View> 
-               
+              <View style= {[styles.img,styles.imgGG]}>
+                <TouchableOpacity>
+                  <Image
+                      style={{resizeMode: 'contain', height: 35, width: 35}}
+                      source={{uri : 'https://i.imgur.com/ID7QQxF.png'}} //logo FB
+                    />
+                </TouchableOpacity>
+              </View> 
             </View>
-
-
         </View>
-
-        
-       </View>
+       </Animatable.View>
        <Modal
               animationType= "slide"
               transparent={true}
@@ -147,28 +167,16 @@ const Login = ({ navigation }) => {
                 <View style={{overflow: 'hidden'}}>
                   <View style={{ backgroundColor: 'white', borderWidth: 1.5, borderColor: '#DCDCDC', borderRadius: 10, 
                                  marginHorizontal: 10, height: windowHeight/2.5, marginTop: windowHeight/3, alignItems: 'center' }}>
-      
-                     
                        <TouchableOpacity style={{position: 'absolute', right: 20,top: 10}}
                                         onPress={() => {setModalAccess(!modalAccess)}}>
                         <Image source={{uri: 'https://i.imgur.com/dIsk0MM.png'}}
                               style={{resizeMode: 'contain', width: 15, height: 15, }} 
                               />
                       </TouchableOpacity>
-                      
-                      {(userName == undefined || passWord == undefined || passWord.length !==6)?
                         <View> 
                           <Text style={{color: 'black', marginTop: 30, fontSize: 20, fontWeight: 'bold', color: '#FF4500', textAlign: 'center'}}>Đăng nhập thất bại!</Text>
-                          <Text style={{color: 'black', marginTop: 10,fontSize: 16, fontWeight: 'bold', color: '#FF4500', textAlign: 'center'}}>Vui lòng điền đủ thông tin</Text>
+                          <Text style={{color: 'black', marginTop: 10,fontSize: 16, fontWeight: 'bold', color: '#FF4500', textAlign: 'center'}}>Vui lòng kiểm tra lại</Text>
                         </View>
-                        :
-                        <View> 
-                          <Text style={{color: 'black', marginTop: 30, fontSize: 20, fontWeight: 'bold', color: '#FF4500', textAlign: 'center'}}>Đăng nhập thất bại!</Text>
-                          <Text style={{color: 'black', marginTop: 10,fontSize: 16, fontWeight: 'bold', color: '#FF4500'}}>Sai thông tin số điện thoại hoặc mật khẩu</Text>
-                        </View>
-                      }
-                      
-                      
                       <Image source={{uri: 'https://i.imgur.com/mzeg5JT.png'}} 
                              style={{resizeMode: 'contain', width: 150, height: 150, marginTop: 10}}
                       />
@@ -243,10 +251,7 @@ const styles = StyleSheet.create({
       marginBottom: '-2%',
   },
       imgVector :{
-
-       
         resizeMode: 'contain',
-       
     },
 
     textForgot: {

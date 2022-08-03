@@ -6,7 +6,7 @@ const RegistrationOTPPhone = ({ navigation }) => {
         <View style= {styles.container}>
         <Image
           style={styles.logoImage}
-          source={require("./img/logo.png")}
+          source={{uri : 'https://i.imgur.com/T6eMqr7.png'}}
        />
     
     
