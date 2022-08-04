@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React, {createContext, useEffect, useState} from 'react'
+import React, {createContext, useEffect, useRef, useState} from 'react'
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -13,32 +13,49 @@ export const AuthProvider = ({children}) => {
   const [userToken, setUserToken] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
 
-
 /*   useEffect(() =>{
     AsyncStorage.clear();
   },[]); */
 
-
   useEffect(() => {
+    const isLoggedIn = async() => {
+      try {
+        setIsLoading(true);
+        let user = JSON.parse(await AsyncStorage.getItem('userInfo'));
+        let token = await AsyncStorage.getItem('userToken');
+        if( token ){
+          delete user.accessToken;
+          setUserInfo(user);
+          setUserToken(token);
+        }
+        setIsLoading(false);
+      } catch (e) {
+        console.log(`isLoggedIn: ${e.message}`);
+      }
+    }
     isLoggedIn();
   },[]);
 
-  const login = (userName, passWord) => {
+/*   const login = (username, password) => {
     setIsLoading(true);
-    axios.post(`http://192.168.1.3:3000/login` ,{
-      username: userName,
-      password: passWord,
-    })
+    axios.post(`http://192.168.1.3:3000/login` ,{username,password})
     .then(res =>{
-      setUserInfo(res.data);
-      setUserToken(res.data.accessToken);
-      AsyncStorage.setItem('userInfo', JSON.stringify(res.data));
-      AsyncStorage.setItem('userToken', res.data.accessToken);
-
+        console.log('oke');
+        setUserInfo(res.data);
+        setUserToken(res.data.accessToken);
+        AsyncStorage.setItem('userInfo', JSON.stringify(res.data));
+        AsyncStorage.setItem('userToken', res.data.accessToken);
     })
     .catch(e =>{
       console.log(`Login error: ${e.message}`);
-    })
+    }) 
+    setIsLoading(false);
+  } */
+  
+  const login = (userToken, userInfo) =>{
+    setIsLoading(true);
+    setUserToken(userToken);
+    setUserInfo(userInfo);
     setIsLoading(false);
   }
 
@@ -50,22 +67,7 @@ export const AuthProvider = ({children}) => {
     setIsLoading(false);
   }
 
-  const isLoggedIn = async() => {
-    try {
-      setIsLoading(true);
-      let user = JSON.parse(await AsyncStorage.getItem('userInfo'));
-      let token = await AsyncStorage.getItem('userToken');
-
-      if( user ){
-        delete user.accessToken;
-        setUserInfo(user);
-        setUserToken(token);
-      }
-      setIsLoading(false);
-    } catch (e) {
-      console.log(`isLoggedIn: ${e.message}`);
-    }
-  }
+  
   return (
     <AuthContext.Provider value={{login, logout, isLoading, userToken, userInfo}}>
       {children}

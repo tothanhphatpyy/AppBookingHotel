@@ -14,45 +14,25 @@ const Login = ({ navigation }) => {
   const [passWord, setPassWord] = useState('');
   const [hide, setHide] = useState(false);
   const [modalAccess, setModalAccess] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
   const {login} = useContext(AuthContext);
 
-
   const handleLogin = () => {
+    console.log(userName, passWord);
     if(userName== '' || passWord == '' || passWord.length !==6)
+    setModalAccess(!modalAccess);
+
+    axios.post(`http://192.168.1.3:3000/login` ,{username: userName, password : passWord})
+    .then(res =>{
+        AsyncStorage.setItem('userInfo', JSON.stringify(res.data));
+        AsyncStorage.setItem('userToken', res.data.accessToken);
+        //navigation.navigate('TabScreen');
+        login(res.data.accessToken, res.data);
+    })
+    .catch(e =>{
+      console.log(`Login error: ${e.message}`);
       setModalAccess(!modalAccess);
-    else{
-      const fetchData = async () =>{
-        setIsLoading(true);
-        try {
-          const {data : response} = await axios.post(`http://192.168.1.3:3000/login`, {
-             username: userName,
-             password: passWord,
-          });
-          if (response.message =='Tài khoản không tồn tại') {
-            console.log('Tài khoản không tồn tại');
-            setIsLoading(false);
-          } 
-          if (response.message =='Sai mật khẩu') {
-            console.log('Sai mật khẩu');
-            setIsLoading(false);
-          } 
-          else {
-            console.log(response);
-            AsyncStorage.setItem('userID', response._id);
-            AsyncStorage.setItem('username', response.username);
-            AsyncStorage.setItem('role', response.role.toString());
-            navigation.navigate('Tabs');
-          }
-  
-        } catch (error) {
-          console.log('Loi');
-          setIsLoading(false);
-        }
-      }
-      fetchData();
-    }
+    }) 
   }
 
   return (
@@ -92,17 +72,16 @@ const Login = ({ navigation }) => {
               <Image
                 style={{resizeMode: 'contain', height: 18, width: 18, tintColor: 'gray'}}
                 source={{uri : 'https://i.imgur.com/5r5f9y6.png'}}/>
-               
               :
-             
               <Image
                 style={{height: 21, width: 20,  tintColor: 'gray'}}
                 source={{uri : 'https://i.imgur.com/GBxZHKo.png'}}/>
             }
-            
           </TouchableOpacity>
-            
-
+          
+          {(passWord.length) ==6 || passWord == '' ? null 
+            :<Text style={{color: 'red', fontSize: 13, marginTop: 10, marginLeft: 40}}>Mật khẩu gồm 6 kí tự</Text> }
+          
           <TouchableOpacity>
             <Text style= {styles.textForgot}>Quên mật khẩu?</Text>
           </TouchableOpacity>
@@ -110,7 +89,7 @@ const Login = ({ navigation }) => {
 
           <TouchableOpacity>
             <Text style= {styles.btnLogin}
-              onPress = {() => login(userName, passWord)}
+              onPress = {() => handleLogin()}
             >ĐĂNG NHẬP</Text>
           </TouchableOpacity>
             
@@ -194,7 +173,6 @@ export default Login
 const styles = StyleSheet.create({
 
     container: {
-
         flex: 1,
     },
     logoImage: {
@@ -218,7 +196,7 @@ const styles = StyleSheet.create({
         fontFamily: 'Roboto',
         marginTop: '5%',
         marginLeft: '10%',
-        fontSize: 28,
+        fontSize: 25,
         color: 'black',
         fontWeight: 'bold',
     },
@@ -256,8 +234,9 @@ const styles = StyleSheet.create({
 
     textForgot: {
       fontFamily: 'Roboto',
-      marginTop: '5%',
+      marginTop: 10,
       fontSize: 15,
+      fontWeight: 'bold',
       color: '#333333',
       marginLeft: '55%'
     },
