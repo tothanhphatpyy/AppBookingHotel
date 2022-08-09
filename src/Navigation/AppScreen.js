@@ -7,6 +7,7 @@ import CheckIn from '../Screens/BookingRoom/CheckIn';
 import ListRoom from '../Screens/BookingRoom/ListRoomOfLocation';
 import DetailRoomOder from '../Screens/BookingRoom/DetailRoomOder';
 import DetailVoucher from '../Screens/Vouchers/DetailVoucher';
+import FindInput from '../Screens/Other/FindInput';
 
 const ScreenStack = createNativeStackNavigator();
 
@@ -18,6 +19,8 @@ const AppScreen = ({navigation}) => {
           <ScreenStack.Screen name= 'Danh sách phòng' component={ListRoom}  />
           <ScreenStack.Screen name= 'Phòng đã đặt' component={DetailRoomOder}  />
           <ScreenStack.Screen name= 'Voucher' component={DetailVoucher}  />
+          <ScreenStack.Screen name= 'FindInput' component={FindInput}  />
+
     </ScreenStack.Navigator>
   )
 }

@@ -14,8 +14,7 @@ const Home_Tab = ( {navigation} ) => {
   const [loading, setLoading] = useState(true);
   
   const { userToken, userInfo} = useContext(AuthContext);
-
-  const setNameUser = useRef(userInfo.name.split(" "))
+  const setNameUser = useRef(userInfo.name.split(" "));
 
 
   useEffect(() => {
@@ -115,7 +114,7 @@ const Home_Tab = ( {navigation} ) => {
         <View>
           <Text style={styles.textAnswer}>Bạn muốn đi đâu, {setNameUser.current[setNameUser.current.length -1]} ?</Text>
         
-        <TouchableOpacity style={styles.search}>
+        <TouchableOpacity style={styles.search} onPress={() => navigation.navigate('AppScreen', {screen : 'FindInput', params: {listLocation}})}>
           <Image
               style= {styles.imgIc_search}
               source = {{uri: 'https://i.imgur.com/kUTuRfi.png'}}  
