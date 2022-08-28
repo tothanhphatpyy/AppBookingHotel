@@ -2,6 +2,7 @@ import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'rea
 import React, { useEffect, useState } from 'react'
 import { Dimensions } from 'react-native';
 import axios from 'axios';
+import {BASE_URL} from '../../Config';
 import LinearGradient from 'react-native-linear-gradient';
 
 const windowWidth = Dimensions.get('window').width;
@@ -22,7 +23,7 @@ const DetailRoomOder = ({navigation, route}) => {
         const fetchData = async () =>{
           setLoading(true);
           try {
-            const {data: response} = await axios.get(`http://192.168.1.3:3000/list-hotel?hotelID=${idRoomSuggest}`);
+            const {data: response} = await axios.get(`${BASE_URL}/list-hotel?hotelID=${idRoomSuggest}`);
             setDetailRoom(response);
           } catch (error) {
             console.error(error.message);

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Dimensions } from 'react-native';
 import axios from 'axios';
 import LinearGradient from 'react-native-linear-gradient';
+import {BASE_URL} from '../../Config';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -15,6 +16,7 @@ const InfoRoom = ({navigation, route}) => {
     const [loading, setLoading] = useState(true);
 
     const idRoomSuggest = route.params.idRoomSuggest;
+    const hideBottom = route.params.hideBottom;
 
     const idRoom = (idRoomSuggest.replace(/[^0-9]/g , '')).slice(0,5)
 
@@ -22,7 +24,7 @@ const InfoRoom = ({navigation, route}) => {
         const fetchData = async () =>{
           setLoading(true);
           try {
-            const {data: response} = await axios.get(`http:/192.168.1.3:3000/list-hotel?hotelID=${idRoomSuggest}`);
+            const {data: response} = await axios.get(`${BASE_URL}/list-hotel?hotelID=${idRoomSuggest}`);
             setDetailRoom(response);
           } catch (error) {
             console.error(error.message);
@@ -47,46 +49,49 @@ const InfoRoom = ({navigation, route}) => {
         },
     ]
 
-  return (
-     <View style={{}}>
+return (
+    <View style={{}}>
          {/* Tab Top */}
-         <View 
-          style={{backgroundColor: '#F8F8F8',height: 50, width: '100%', flexDirection: 'row',
-                 alignItems: 'center' , borderBottomColor: '#DCDCDC', borderBottomWidth: 1,}}>
-            <TouchableOpacity style={{marginLeft: -5, paddingVertical: 10, paddingHorizontal: 20}}
+        <View 
+            style={{backgroundColor: '#F8F8F8',height: 50, width: '100%', flexDirection: 'row',
+                 alignItems: 'center' , borderBottomColor: '#DCDCDC', borderBottomWidth: 1, justifyContent: 'space-between'}}>
+            <TouchableOpacity style={{paddingVertical: 10, paddingHorizontal: 20}}
                               onPress={() => navigation.goBack()}>
                 <Image
                     style={{resizeMode: 'contain', width: 30, height: 30, tintColor: 'orange'}} 
-                    source= {{uri: 'https://img.icons8.com/material/344/back--v1.png'}}
+                    source= {{uri: 'https://i.imgur.com/0oDjrbE.png'}}
                 />
             </TouchableOpacity>
-            <TouchableOpacity  style={{marginLeft: 180,}}>
-                <Image 
-                    style={{resizeMode: 'contain', width: 30, height: 30, tintColor: '#484848',}} 
-                    source= {{uri: 'https://img.icons8.com/material/344/share-rounded.png'}} 
-                />
-            </TouchableOpacity>
-            <TouchableOpacity style={{marginLeft: 30,}}
-                              onPress ={() => {
-                              setchangeColor(!changeColor)
-                              }}>
-                {changeColor ? 
+            <View style={{flexDirection: 'row', alignItems: 'center', marginRight: 20}}>
+                <TouchableOpacity style={{}}>
                     <Image 
-                     style={{resizeMode: 'contain', width: 32, height: 32, tintColor: '#FF4500'}} 
-                     source= {{uri:'https://i.imgur.com/nqv7cS5.png'}} /> 
-                    :
-                    <Image 
-                    style={{resizeMode: 'contain', width: 30, height: 30, tintColor: '#484848'}} 
-                    source= {{uri:'https://img.icons8.com/metro/72/like.png'}} /> 
-                }
-            </TouchableOpacity>
+                        style={{resizeMode: 'contain', width: 34, height: 34, tintColor: '#484848',}} 
+                        source= {{uri: 'https://i.imgur.com/GGw3lNc.png'}} 
+                    />
+                </TouchableOpacity>
+                <TouchableOpacity style={{marginLeft: 20,}}
+                                onPress ={() => {
+                                setchangeColor(!changeColor)
+                                }}>
+                    {changeColor ? 
+                        <Image 
+                        style={{resizeMode: 'contain', width: 30, height: 30, tintColor: '#FF4500'}} 
+                        source= {{uri:'https://i.imgur.com/nqv7cS5.png'}} /> 
+                        :
+                        <Image 
+                        style={{resizeMode: 'contain', width: 28, height: 28, tintColor: '#484848'}} 
+                        source= {{uri:'https://i.imgur.com/bwCX5QJ.png'}} /> 
+                    }
+                </TouchableOpacity>
+            </View>
+            
          </View>
 
         <ScrollView style={{ backgroundColor: '#F9F9F9'}}>
             {loading && (
               <View style={{justifyContent: 'center', marginTop: 30, flexDirection: 'row'}}>
-              <Text style={{color: 'black', marginTop: 10}}>Loading...</Text>
-              <ActivityIndicator size="large" color="orange" />
+                <Text style={{color: 'black', marginTop: 10}}>Loading...</Text>
+                <ActivityIndicator size="large" color="orange" />
               </View>
             )}
             {!loading && ( 
@@ -255,7 +260,7 @@ const InfoRoom = ({navigation, route}) => {
                             {/* Price */}
                             <Text style={{marginTop: 40, fontWeight: 'bold', color: 'black',fontSize: 18}}>Giá phòng</Text>
                             <View style={{marginTop: 10}}>
-                                <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 10, backgroundColor: '#F7F7F7',
+                                <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 10, backgroundColor: '#E8E8E8',
                                             padding: 10, borderRadius: 6
                                             }}>
                                     <Text style={{color: 'black', fontWeight: '400', fontSize: 14}}>Thứ Hai - Thứ Năm</Text>
@@ -265,7 +270,7 @@ const InfoRoom = ({navigation, route}) => {
                                     <Text style={{color: 'black', fontWeight: '400', fontSize: 14}}>Thứ Sáu - Chủ Nhật</Text>
                                     <Text style={{color: 'black', fontWeight: 'bold', fontSize: 14}}>{detailRoom.priceWeb_Sun}đ̲</Text>
                                 </View>
-                                <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 10, backgroundColor: '#F7F7F7',
+                                <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 10, backgroundColor: '#E8E8E8',
                                             padding: 10, borderRadius: 6
                                             }}>
                                     <Text style={{color: 'black', fontWeight: '400', fontSize: 14}}>Phí trẻ em tăng thêm</Text>
@@ -275,7 +280,7 @@ const InfoRoom = ({navigation, route}) => {
                                     <Text style={{color: 'black', fontWeight: '400', fontSize: 14}}>Thuê theo tháng</Text>
                                     <Text style={{color: 'black', fontWeight: 'bold', fontSize: 14}}>8.00%</Text>
                                 </View>
-                                <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 10, backgroundColor: '#F7F7F7',
+                                <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 10, backgroundColor: '#E8E8E8',
                                             padding: 10, borderRadius: 6
                                             }}>
                                     <Text style={{color: 'black', fontWeight: '400', fontSize: 14}}>Số đêm tối thiểu</Text>
@@ -298,7 +303,7 @@ const InfoRoom = ({navigation, route}) => {
                             <Text style={{fontWeight: 'bold', fontSize: 18, color: 'black', marginTop: 20
                                         }}>Thời gian nhận phòng
                             </Text>
-                            <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 10, backgroundColor: '#F7F7F7',
+                            <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 10, backgroundColor: '#E8E8E8',
                                             padding: 10, borderRadius: 6
                                         }}>
                                 <Text style={{color: 'black', fontWeight: '400', fontSize: 14}}>Ngày đến</Text>
@@ -319,35 +324,38 @@ const InfoRoom = ({navigation, route}) => {
         </ScrollView>
 
        {/*  Tab Bottom */}
-         <View style={{ position: 'absolute', height: 90, left: 0, top: windowHeight - 90, width: windowWidth,
-                        borderTopWidth: 1.5, borderTopColor: '#DCDCDC', backgroundColor: 'white', }}>
+        {hideBottom? null :
+        <View style={{ position: 'absolute', height: 90, left: 0, top: windowHeight - 90, width: windowWidth,
+        borderTopWidth: 1.5, borderTopColor: '#DCDCDC', backgroundColor: 'white', }}>
             <View style={{ flexDirection: 'row', marginTop: 10, alignItems: 'center', justifyContent: 'space-between', marginHorizontal: 20}}>
-                <View style={{flexDirection: 'row', alignItems: 'center',}}>
-                    <Text style={{fontFamily: 'Roboto', fontSize: 20, fontWeight: 'bold', color: 'black', marginTop: 8
-                        }}>{detailRoom.priceMon_Fri}đ̲</Text>
-                    <Text style={{fontFamily: 'Roboto', marginTop: 13, color: 'gray' }}>x 1 đêm</Text>
-                </View>
- 
-                <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', }}
-                                onPress ={() => navigation.navigate('Đặt phòng', {idRoomOder : idRoomSuggest})}>  
-                    <LinearGradient
-                    colors={['#FF4500', '#FF6347', '#FF8C00']}
-                    start={{x: 0, y: 0.5}}
-                    end={{x: 1, y: 1}}
-                    style={{alignItems: 'center', paddingVertical: 10, paddingHorizontal: 10, borderRadius: 10, flexDirection: 'row'}}
-                    >
-                    <Image 
-                    source={{uri: 'https://i.imgur.com/KFwOsZ6.png'}}  
-                    style={{resizeMode: 'contain', height: 20, width: 20}}
-                    />
-                    <Text style={{ fontFamily: 'Roboto', fontWeight: 'bold', color:'black', fontSize: 14, marginLeft: 10}}>
-                        Đặt phòng nhanh</Text>
-                    </LinearGradient>
-                </TouchableOpacity>
+            <View style={{flexDirection: 'row', alignItems: 'center',}}>
+                <Text style={{fontFamily: 'Roboto', fontSize: 20, fontWeight: 'bold', color: 'black', marginTop: 8
+                    }}>{detailRoom.priceMon_Fri}đ̲</Text>
+                <Text style={{fontFamily: 'Roboto', marginTop: 13, color: 'gray' }}>x 1 đêm</Text>
             </View>
-         </View>
 
-     </View>
+            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', }}
+                            onPress ={() => navigation.navigate('Đặt phòng', {idRoomOder : idRoomSuggest})}>  
+                <LinearGradient
+                colors={['#FF4500', '#FF6347', '#FF8C00']}
+                start={{x: 0, y: 0.5}}
+                end={{x: 1, y: 1}}
+                style={{alignItems: 'center', paddingVertical: 10, paddingHorizontal: 10, borderRadius: 10, flexDirection: 'row'}}
+                >
+                <Image 
+                source={{uri: 'https://i.imgur.com/KFwOsZ6.png'}}  
+                style={{resizeMode: 'contain', height: 20, width: 20}}
+                />
+                <Text style={{ fontFamily: 'Roboto', fontWeight: 'bold', color:'black', fontSize: 14, marginLeft: 10}}>
+                    Đặt phòng nhanh</Text>
+                </LinearGradient>
+            </TouchableOpacity>
+            </View>
+        </View>
+        }                              
+         
+
+    </View>
    )
 }
 

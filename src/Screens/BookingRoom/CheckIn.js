@@ -1,17 +1,26 @@
 import { Dimensions, Image, ScrollView, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View, Modal, TextInput, Switch, ActivityIndicator} from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext, useMemo, useRef } from 'react'
 import DatePicker from 'react-native-date-picker'
 import CountryPicker from 'react-native-country-picker-modal'
 import LinearGradient from 'react-native-linear-gradient'
 import axios from 'axios';
+import {BASE_URL} from '../../Config';
+import { AuthContext } from '../../Context/AuthContext'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-
 const CheckIn = ({ navigation , route}) => {
 
+  const getNextDay = useMemo(() => { 
+    let nextDay = new Date();
+    nextDay.setDate(nextDay.getDate() + 1);
+    return nextDay;
+  }, []);
+
   const [date, setDate] = useState(new Date());
-  const [dateReturn, setDateReturn] = useState(date);
+  const [dateReturn, setDateReturn] = useState(getNextDay);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
   const [changeImg, setchangeImg] = useState(false);
@@ -28,13 +37,16 @@ const CheckIn = ({ navigation , route}) => {
   const [loading, setLoading] = useState(true);
 
   const idRoomOder = route.params.idRoomOder;
+
+  const {userInfo, loadData} = useContext(AuthContext);
+
   
   
   useEffect(() => {
     const fetchData = async () =>{
       setLoading(true);
       try {
-        const {data: response} = await axios.get(`http:///192.168.1.3:3000/list-hotel?hotelID=${idRoomOder}`);
+        const {data: response} = await axios.get(`${BASE_URL}/list-hotel?hotelID=${idRoomOder}`);
         setInfoRoomOder(response);
       } catch (error) {
         console.error(error.message);
@@ -43,6 +55,36 @@ const CheckIn = ({ navigation , route}) => {
     }
     fetchData();
   }, []);
+  const submitOder = async() => {
+    setmodalAccess(true);
+    try {
+      const {data : response} = await axios.post(`${BASE_URL}/add-oder`,{
+        totalPrice : totalPrice(), 
+        dateOder : `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`, 
+        dateReturn: `${dateReturn.getFullYear()}-${dateReturn.getMonth()+1}-${dateReturn.getDate()}`,  
+        status_payment : 0, 
+        status_confirm: 0, 
+        hotel : idRoomOder, 
+        user: userInfo._id,
+      })
+      let roomOder = {...response.data, getDay, getDayReturn, numberOfPeople, numberOfChildren, infoRoomOder };
+      AsyncStorage.getItem('historyOder', (err, result) => {
+        if (result !== null) {
+          const listRoomOder = JSON.parse(result); 
+          listRoomOder.unshift(roomOder);
+          AsyncStorage.setItem('historyOder', JSON.stringify(listRoomOder));
+        } else {
+          const listRoomOder = [roomOder];
+          AsyncStorage.setItem('historyOder', JSON.stringify(listRoomOder));
+        };
+        loadData();
+      });
+      
+
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
 
   const checkNumberPeople =(number) =>{
     if(number > 1){
@@ -80,23 +122,49 @@ const CheckIn = ({ navigation , route}) => {
       return change = 'Chủ Nhật'
     }
   }
+  
+ 
+ 
   const getDay = changeDay(date.getDay());
   const getDayReturn = changeDay(dateReturn.getDay());
 
   const toggleSwitch = () => sethideSwitch(previousState => !previousState);
 
-  const dateOder = {
-    getDay : getDay,                                                                             
-    getDate : date.getDate(),
-    getMonth : date.getMonth(),
-    getYear : date.getFullYear(),
+  const totalPrice =() => {
+    const changeMilisecondToDate = 0.000000011574074074074 * (dateReturn.getTime()- date.getTime()); // đổi miligiay sang ngay
+    const numberDate = Math.round(changeMilisecondToDate);
+    const priceMon_Fri = (infoRoomOder.priceMon_Fri).split(',').join('');
+    const priceWeb_Sun = (infoRoomOder.priceWeb_Sun).split(',').join('');
+    const priceDiscount = (infoRoomOder.priceDiscount).split(',').join(''); //xử lí discount
+
+    //Trường hợp số ngày ở nhỏ hơn 7
+    let sum = 0 ;
+    for(let i = 0; i < numberDate % 7; i++) { 
+      // Trường hợp rơi vào thứ 6,7,CN)
+      if( (date.getDay() + i == 5 ) || (date.getDay() + i == 6 || (date.getDay() + i == 7 ))){
+        sum += Number(priceMon_Fri) + ( Number(priceWeb_Sun) - Number(priceMon_Fri) ); //chênh lệch số tiền phòng cuỗi tuần
+      }
+      else sum+= Number(priceMon_Fri);
+    }
+    
+    //Trường hợp số ngày ở lớn hơn 7
+    for(let i = 0 ; i < Math.floor(numberDate /7) ; i++){
+      sum += (Number(priceMon_Fri)*4 + Number(priceWeb_Sun)*3)
+    }
+    let totalPrice = sum + Number((numberOfPeople -1) * 50000);
+    let totalPriceConvert = totalPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return totalPriceConvert;
   }
-  const dateReturnOder = {
-      getDayReturn : getDayReturn,                                                                             
-      getDateReturn : dateReturn.getDate(),
-      getMonthReturn : dateReturn.getMonth(),
-      getYearReturn : dateReturn.getFullYear(),
-  } 
+  
+  // Xử lí ngày ở bằng ngày đi -> ngày đi + 1
+  const validateDateReturn=(dateValue) => {
+    if(dateReturn.getDate() == dateValue.getDate()){
+      let nextDay = new Date(dateValue);
+      nextDay.setDate(dateValue.getDate() + 1);
+      setDateReturn(nextDay);
+    }
+  }
+
   return (
    
     <View style={{}}>
@@ -109,7 +177,7 @@ const CheckIn = ({ navigation , route}) => {
                                           onPress={() => navigation.goBack()}>
                     <Image
                         style={{resizeMode: 'contain', width: 25, height: 30, left: -5, tintColor: 'orange'}} 
-                        source= {{uri: 'https://img.icons8.com/material/344/back--v1.png'}}/>
+                        source= {{uri: 'https://i.imgur.com/0oDjrbE.png'}}/>
                 </TouchableOpacity>
                 <Text style={{color: 'black', fontWeight: '500', fontSize: 18}}>Thông tin khách hàng</Text>
             </View>
@@ -136,7 +204,7 @@ const CheckIn = ({ navigation , route}) => {
             </Text>
             <View style={{position: 'absolute', left: 90,}}>
               <Text style={{top: 25, fontSize: 13, color: 'gray' }}>
-                {infoRoomOder.numberPeople} khách • {infoRoomOder.numberBedRoom}phòng ngủ • {infoRoomOder.numberBathRoom}phòng tắm
+                {infoRoomOder.numberPeople} khách • {infoRoomOder.numberBedRoom} phòng ngủ • {infoRoomOder.numberBathRoom} phòng tắm
               </Text>
               <Text style={{top: 30, fontSize: 12, color: 'gray'}}>
                 {infoRoomOder.detailLocation}
@@ -157,7 +225,7 @@ const CheckIn = ({ navigation , route}) => {
              <Text style={{color: 'gray', textAlign: 'center', fontSize:11}}>Ngày đến 02:00 pm</Text>
               <View style={{marginLeft: 20, marginTop: 10, flexDirection: 'row', alignItems: 'center',}}>
                 <TouchableOpacity onPress={() => setchangeImg(!changeImg)}>
-                  {changeImg? 
+                  {changeImg?
                   <Image source={{uri: 'https://i.imgur.com/5buUh7G.png'}}
                           style={{resizeMode: 'contain', width: 19, height: 20,}} />
                     :
@@ -207,9 +275,10 @@ const CheckIn = ({ navigation , route}) => {
                       <DatePicker 
                         date={date} 
                         onDateChange={(dateValue) => {
-                          setDate(dateValue)
-                          setDateReturn(dateValue)
-                        }}
+                          setDate(dateValue);
+                          //setDateReturn(dateValue);
+                          validateDateReturn(dateValue);
+                          }}
                         mode= "date" 
                         androidVariant = 'nativeAndroid'
                         />
@@ -235,7 +304,7 @@ const CheckIn = ({ navigation , route}) => {
                                  height: 200, marginTop: windowHeight-200, alignItems: 'center' }}>
       
                       <DatePicker 
-                        date={date} 
+                        date={dateReturn} 
                         onDateChange={setDateReturn}
                         mode= "date" 
                         androidVariant = 'nativeAndroid'
@@ -273,7 +342,7 @@ const CheckIn = ({ navigation , route}) => {
                 </View>
               </View>
               <View style={{marginTop: 30, backgroundColor:'#F3F3F3', borderRadius: 5}}>
-                  <Text style={{padding : 10, color: 'gray', fontSize: 13}}>Chỗ ở sẽ thu thêm phí từ khách thứ 2, tối đa là 3 khách. Phí thêm khách là 0đ/ người</Text>
+                  <Text style={{padding : 10, color: 'gray', fontSize: 13}}>Chỗ ở sẽ thu thêm phí từ khách thứ 2, tối đa là 3 khách. Phí thêm khách là 50.000đ/ người</Text>
               </View>
 
               <View style={{marginTop: 30, flexDirection: 'row', alignItems: 'center'}}>
@@ -295,7 +364,7 @@ const CheckIn = ({ navigation , route}) => {
                 </View>
               </View>
               <View style={{marginTop: 30, backgroundColor:'#F3F3F3', borderRadius: 5}}>
-                  <Text style={{padding : 10, color: 'gray', fontSize: 13}}>Chỗ ở sẽ thu thêm phí từ khách thứ 2, tối đa là 3 khách. Phí thêm khách là 125.000đ/ người</Text>
+                  <Text style={{padding : 10, color: 'gray', fontSize: 13}}>Chỗ ở sẽ thu thêm phí từ khách thứ 2, tối đa là 3 khách. Phí thêm khách là 0đ/ người</Text>
               </View>
 
               <View style={{marginTop: 30, flexDirection: 'row', alignItems: 'center'}}>
@@ -328,9 +397,10 @@ const CheckIn = ({ navigation , route}) => {
               <Text style={{color: 'red'}}>*</Text>
               <Text style={{color: 'black', fontWeight: 'bold', fontSize: 14}}>Tên khách hàng</Text>
               <TextInput
-                style={{position: 'absolute', left: 150, top: 6, color: 'black'}}
+                style={{position: 'absolute', left: 150, top: 6, color: '#303030'}}
                 placeholderTextColor={'gray'}
-                placeholder="Nhập tên của bạn          "
+                //placeholder="Nhập tên của bạn          "
+                value={userInfo.name}
               />
             </View>
             <View style={{flexDirection: 'row',paddingVertical: 17, borderBottomWidth: 0.5, borderBottomColor: '#DCDCDC', alignItems: 'center'}}>
@@ -356,10 +426,11 @@ const CheckIn = ({ navigation , route}) => {
               </View>
               <View style={{position: 'absolute', left: 150, flexDirection: 'row', alignItems: 'center'}}>        
                 <TextInput
-                  style={{ color: 'black'}}
+                  style={{ color: '#303030'}}
                   placeholderTextColor={'gray'}
                   keyboardType="numeric"
-                  placeholder="Nhập số điện thoại          "
+                  //placeholder="Nhập số điện thoại          "
+                  value={userInfo.username}
                 />
               </View>          
              
@@ -368,17 +439,10 @@ const CheckIn = ({ navigation , route}) => {
               <Text style={{color: 'red'}}>*</Text>
               <Text style={{color: 'black', fontWeight: 'bold', fontSize: 14}}>Địa chỉ Email</Text>
               <TextInput
-                style={{position: 'absolute', left: 150, top: 6, color: 'black',}}
+                style={{position: 'absolute', left: 150, top: 6, color: '#303030',}}
                 placeholderTextColor={'gray'}
-                placeholder="Nhập email của bạn          "
-              />
-            </View>
-            <View style={{flexDirection: 'row',paddingVertical: 20, borderBottomWidth: 0.5, borderBottomColor: '#DCDCDC',  }}>
-              <Text style={{color: 'black', fontWeight: 'bold', fontSize: 14}}>Bạn đến từ đâu</Text>
-              <TextInput
-                style={{position: 'absolute', left: 150, top: 6, color: 'black' }}
-                placeholderTextColor={'gray'}
-                placeholder="Nhập địa chỉ          "
+                //placeholder="Nhập email của bạn          "
+                value={userInfo.email}
               />
             </View>
           </View>     
@@ -405,23 +469,29 @@ const CheckIn = ({ navigation , route}) => {
             />
             : null}
             <View style={{marginTop: 10, marginLeft: -20, height: 5, backgroundColor: '#F3F3F3'}}></View>
-          </View>           
+          </View> 
 
+        {/* TotalPrice */}
+        <View style={{marginTop: 20, flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 20}}>
+            <Text style={{color: 'black', fontSize: 18, fontWeight: 'bold'}}>Tổng tiền</Text>
+            <Text style={{color: 'black', fontSize: 18, fontWeight: 'bold'}}>{totalPrice()}đ</Text>
+        </View>
 
 
         <TouchableOpacity
-          onPress={() => {setmodalAccess(true)
-                          }}>
+          onPress={() => submitOder()}>
           <LinearGradient
               colors={['#F08080', '#FF6347', '#FF4500']}
               start={{x: 0, y: 0.5}}
               end={{x: 1, y: 1}}
               
-              style={{alignItems: 'center', marginHorizontal: 20, paddingVertical: 10, paddingHorizontal: 20, borderRadius: 10, marginTop: 50}}>
+              style={{alignItems: 'center', marginHorizontal: 30, paddingVertical: 12, paddingHorizontal: 20, borderRadius: 10, marginTop: 50}}>
               <Text style={{ fontSize: 15, fontWeight:'bold', color: 'white', paddingHorizontal: 20, paddingVertical: 0}}
                 >Đặt phòng</Text>
           </LinearGradient>
         </TouchableOpacity>  
+
+        
          
 
         <Modal
@@ -448,11 +518,7 @@ const CheckIn = ({ navigation , route}) => {
                              style={{resizeMode: 'contain', width: 150, height: 150, marginTop: 10}}
                       />
                       <TouchableOpacity style={{}}
-                                        onPress={() => navigation.navigate('Đặt chỗ của tôi', {
-                                                                                               infoRoomOder,
-                                                                                               dateOder,
-                                                                                               dateReturnOder,
-                                                                                              })}>
+                                        onPress={() => navigation.navigate('Đặt chỗ của tôi')}>
                         <LinearGradient
                           colors={['#F08080', '#FF6347', '#FF4500']}
                           start={{x: 0, y: 0.5}}

@@ -4,18 +4,17 @@ import React from 'react'
 const DetailVoucher = ({ navigation}) => {
   return (
     <View style={{}}>
-        <View 
-            style={{backgroundColor: '#F8F8F8',height: 45, width: '100%', flexDirection: 'row',
+        <View style={{backgroundColor: '#F8F8F8',height: 40, width: '100%', flexDirection: 'row',
                     alignItems: 'center' , borderBottomColor: '#DCDCDC', borderBottomWidth: 1,}}>
-                <TouchableOpacity style={{marginLeft: -5, paddingVertical: 10, paddingHorizontal: 20}}
+                <TouchableOpacity style={{marginLeft: -5, paddingHorizontal: 20}}
                                 onPress={() => navigation.goBack()}>
                     <Image
                         style={{resizeMode: 'contain', width: 30, height: 30, tintColor: 'orange'}} 
-                        source= {{uri: 'https://img.icons8.com/material/344/back--v1.png'}}/>
+                        source= {{uri: 'https://i.imgur.com/0oDjrbE.png'}}/>
                 </TouchableOpacity>
         </View>
         <Image
-            style={{resizeMode: 'contain', width: '100%', height: 200, marginTop: -12}} 
+            style={{resizeMode: 'contain', width: '100%', height: 200, marginTop: 0}} 
             source= {{uri: 'https://i.imgur.com/UCGiEV7.jpg'}}/>
         <Text style={{color: 'black', fontSize: 18, textAlign: 'center', fontWeight: 'bold'}}>Xõa hè cực đã cùng MoMo!</Text>
         <View style={{ alignItems: 'center', }}>

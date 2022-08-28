@@ -11,10 +11,10 @@ import FindInput from '../Screens/Other/FindInput';
 
 const ScreenStack = createNativeStackNavigator();
 
-const AppScreen = ({navigation}) => {
+const AppScreen = () => {
   return (
     <ScreenStack.Navigator screenOptions={{headerShown: false}}>
-          <ScreenStack.Screen name= 'Thông tin phòng' component={InfoRoom}  />
+          <ScreenStack.Screen name= 'Thông tin phòng' component={InfoRoom} initialParams={{hideBottom : false}}/>
           <ScreenStack.Screen name= 'Đặt phòng' component={CheckIn}  />
           <ScreenStack.Screen name= 'Danh sách phòng' component={ListRoom}  />
           <ScreenStack.Screen name= 'Phòng đã đặt' component={DetailRoomOder}  />

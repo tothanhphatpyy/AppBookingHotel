@@ -1,7 +1,7 @@
 import { ActivityIndicator, Image, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
-
+import {BASE_URL} from '../../Config';
 
 const ListRoom = ({navigation, route}) => {  
   const [listRoom, setListRoom] = useState([])
@@ -16,7 +16,7 @@ const ListRoom = ({navigation, route}) => {
     const fetchData = async () =>{
       setLoading(true);
       try {
-        const {data: response} = await axios.get(`http://192.168.1.3:3000/list-hotel/${idLocation}`);
+        const {data: response} = await axios.get(`${BASE_URL}/list-hotel/${idLocation}`);
         setListRoom(response);
       } catch (error) {
         console.error(error.message);

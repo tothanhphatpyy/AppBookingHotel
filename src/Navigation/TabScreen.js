@@ -55,9 +55,9 @@ const TabScreen = () => {
               style={{ tintColor:'gray', marginTop: 5, resizeMode:'contain', width: 25, height: 25}}
               />)
         }}/>
-        <Tabs.Screen name='Đặt chỗ của tôi' component={Order_Tab} initialParams={{infoRoomOder: null,
+        <Tabs.Screen name='Đặt chỗ của tôi' component={Order_Tab} /* initialParams={{infoRoomOder: null,
                                                                                  dateOder : null,
-                                                                                 dateReturnOder : null}}
+                                                                                 dateReturnOder : null}} */
           options={{
             tabBarIcon: () => (
                 <Image 

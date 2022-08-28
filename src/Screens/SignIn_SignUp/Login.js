@@ -4,6 +4,9 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Animatable from 'react-native-animatable';
 import { AuthContext } from '../../Context/AuthContext';
+import {BASE_URL} from '../../Config';
+
+
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -22,7 +25,7 @@ const Login = ({ navigation }) => {
     if(userName== '' || passWord == '' || passWord.length !==6)
     setModalAccess(!modalAccess);
 
-    axios.post(`http://192.168.1.3:3000/login` ,{username: userName, password : passWord})
+    axios.post(`${BASE_URL}/login` ,{username: userName, password : passWord})
     .then(res =>{
         AsyncStorage.setItem('userInfo', JSON.stringify(res.data));
         AsyncStorage.setItem('userToken', res.data.accessToken);

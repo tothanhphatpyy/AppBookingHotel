@@ -5,12 +5,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Animatable from 'react-native-animatable';
 import { AuthContext } from '../../Context/AuthContext';
 
+import {BASE_URL} from '../../Config';
+
 
 const Home_Tab = ( {navigation} ) => {
 
-  const [colorEvent, setColorEvent] = useState(0);
+  const [colorEvent, setColorEvent] = useState(2);
   const [listLocation, setListLocation] = useState([]);
   const [listRoomSuggest, setListRoomSuggest] = useState([]);
+  const [listRoomFavourite, setListRoomFavourite] = useState([]);
   const [loading, setLoading] = useState(true);
   
   const { userToken, userInfo} = useContext(AuthContext);
@@ -21,7 +24,7 @@ const Home_Tab = ( {navigation} ) => {
     const fetchData = async () =>{
       setLoading(true);
       try {
-        const {data: response} = await axios.get(`http://192.168.1.3:3000/location`);
+        const {data: response} = await axios.get(`${BASE_URL}/location`);
         setListLocation(response);
       } catch (error) {
         console.error(error.message);
@@ -34,7 +37,7 @@ const Home_Tab = ( {navigation} ) => {
   const renderHotel = async (idLocation) => {
       setLoading(true);
       try {
-        const {data: response} = await axios.get(`http://192.168.1.3:3000/list-hotel/${idLocation}`);
+        const {data: response} = await axios.get(`${BASE_URL}/list-hotel/${idLocation}`);
         setListRoomSuggest(response);
       } catch (error) {
         console.error(error.message);
@@ -43,11 +46,15 @@ const Home_Tab = ( {navigation} ) => {
   }
 
   useEffect(() => {
+    //AsyncStorage.removeItem('listRoomFavourite');
     const fetchData = async () =>{
       setLoading(true);
       try {
-        const {data: response} = await axios.get(`http://192.168.1.3:3000/list-hotel/62bc561974566b1417c880e2`);
+        const {data: response} = await axios.get(`${BASE_URL}/list-hotel/62bc561974566b1417c880e2`);
         setListRoomSuggest(response);
+        const listRoomLove = JSON.parse(await AsyncStorage.getItem('listRoomFavourite'));
+        if(listRoomLove == null) setListRoomFavourite([]);
+        else setListRoomFavourite(listRoomLove);
       } catch (error) {
         console.error(error.message);
       }
@@ -55,8 +62,38 @@ const Home_Tab = ( {navigation} ) => {
     }
     fetchData();
   }, []);
+    
+  const setRoomFavourite = async(nameRoom) => {
+    const listRoom = JSON.parse(await AsyncStorage.getItem('listRoomFavourite'))
+    console.log(listRoom);
+    if(listRoom){
+      let index = listRoom.findIndex(e => e == nameRoom);
+      if(index !== -1){  //Có vị trí của index
+        listRoom.splice(index, 1);
+        if(listRoom.length > 0){
+          setListRoomFavourite(listRoom);
+          await AsyncStorage.setItem('listRoomFavourite', JSON.stringify(listRoom));
+        }
+        else{
+          setListRoomFavourite([]);
+          await AsyncStorage.setItem('listRoomFavourite', JSON.stringify(listRoom));
+        }
+      } 
+      else {
+        listRoom.push(nameRoom);
+        setListRoomFavourite(listRoom);
+        await AsyncStorage.setItem('listRoomFavourite', JSON.stringify(listRoom));
+      }
+    }
+    else {
+      const listNameroomFavourite = [nameRoom];
+      setListRoomFavourite(listNameroomFavourite);
+      await AsyncStorage.setItem('listRoomFavourite', JSON.stringify(listNameroomFavourite));
+    }
+  }
 
 
+  
 
   const listVoucher =[
     {
@@ -111,17 +148,15 @@ const Home_Tab = ( {navigation} ) => {
             style= {styles.imgLogo}
             source = {{uri: 'https://i.imgur.com/T6eMqr7.png'}}
         />
-        <View>
           <Text style={styles.textAnswer}>Bạn muốn đi đâu, {setNameUser.current[setNameUser.current.length -1]} ?</Text>
         
-        <TouchableOpacity style={styles.search} onPress={() => navigation.navigate('AppScreen', {screen : 'FindInput', params: {listLocation}})}>
-          <Image
-              style= {styles.imgIc_search}
-              source = {{uri: 'https://i.imgur.com/kUTuRfi.png'}}  
-          />
-          <Text style={styles.findInput}>Thử tìm kiếm Hà Nội</Text>
-        </TouchableOpacity>
-        </View>
+          <TouchableOpacity style={styles.search} onPress={() => navigation.navigate('AppScreen', {screen : 'FindInput', params: {listLocation}})}>
+            <Image
+                style= {styles.imgIc_search}
+                source = {{uri: 'https://i.imgur.com/kUTuRfi.png'}}  
+            />
+            <Text style={styles.findInput}>Thử tìm kiếm Hà Nội</Text>
+          </TouchableOpacity>
 
         {/* location */}
         <View>
@@ -150,7 +185,7 @@ const Home_Tab = ( {navigation} ) => {
 
         {/* Service */}
         <ScrollView 
-          style={{flexDirection: 'row'}}
+          style={{flexDirection: 'row',}}
           horizontal 
           showsHorizontalScrollIndicator={false}>
             <TouchableOpacity style={{ 
@@ -175,8 +210,7 @@ const Home_Tab = ( {navigation} ) => {
               borderColor: '#E2E2E2',
               borderRadius: 10,
               paddingBottom: 10,
-              marginLeft: 10,
-            }}>
+              marginLeft: 15}}>
               <Image 
                 style={{height: 100, borderTopLeftRadius: 7, borderTopRightRadius: 7}}
                 source={{uri: 'https://khuvuichoi.com/wp-content/uploads/2020/10/cong-vien-nuoc-thanh-long-1.jpg'}} />
@@ -243,7 +277,6 @@ const Home_Tab = ( {navigation} ) => {
             style={{marginTop: 25, flex: 1, paddingVertical:5 }}
             horizontal
             showsHorizontalScrollIndicator={false}>
-            {/* <Text style={{backgroundColor: 'pink', textAlign: 'center', paddingVertical: 2, marginRight: 290 }}>Hà Nội</Text> */}
             {listLocation.map((item, index) => 
               <TouchableHighlight key={index}>
               <Text 
@@ -270,24 +303,38 @@ const Home_Tab = ( {navigation} ) => {
               </View>
             )}
             {!loading && ( 
-            <View style={{flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', marginRight: 5}}>
+            <View style={{flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', marginRight: 10}}>
                 {listRoomSuggest.map((item, index) => 
                   <TouchableOpacity 
+                    style={{marginTop: 20, width: '45%'}}
                     key={index}
                     onPress={() => navigation.navigate('AppScreen', {screen: 'Thông tin phòng', params: {idRoomSuggest: item._id}})}
                     >              
-                      <Image style={{marginTop: 20, height: 100, width: 150, resizeMode: 'contain', borderRadius: 5}} 
+                      <Image style={{ height: 110, width: '100%', resizeMode: 'contain', borderRadius: 7}} 
                               source= {{uri: `${item.img}`}} />  
-                      <TouchableOpacity
-                          onPress={() => {}} 
-                          style={{position: 'absolute',right: 12, top: 25,}}>
-                          {
-                            false == false ? <Image key={index} style={{resizeMode:'contain', height: 20, width: 20,}} source={{uri : 'https://i.imgur.com/bwCX5QJ.png'}} />
-                            : 
-                            <Image key={index} style={{resizeMode:'contain' ,height: 20, width: 20, }} source={{uri: 'https://i.imgur.com/ROwUrG2.png'}}/>     
-                          }     
-                      </TouchableOpacity>    
-                      <View style={{ marginTop: 5,width: 150}}> 
+
+                        {(listRoomFavourite.length !== 0) ?
+                        <TouchableOpacity style={{position: 'absolute', right: 12, top: 10}}
+                                          onPress={() => setRoomFavourite(item.nameRoom)}>
+                          {listRoomFavourite.map((pre, key) =>
+                          {return pre == item.nameRoom ? 
+                            <Image key={key} style={{resizeMode:'contain', height: 30, width: 30, position: 'absolute', right: -1, top: -1}} 
+                                    source={{uri : 'https://i.imgur.com/y9NnpkW.png'}} />
+                            :
+                            <Image key={key} style={{resizeMode:'contain' ,height: 27, width: 27, position: 'absolute', right: 0, top: 0}}
+                                    source={{uri: 'https://i.imgur.com/7pYW2IM.png'}} />
+                          }   
+                          )}
+                        </TouchableOpacity>
+                        : 
+                        <View style={{position: 'absolute',right: 12, top: 10,}}>
+                          <TouchableOpacity onPress={() => setRoomFavourite(item.nameRoom)}>
+                          <Image style={{resizeMode:'contain' ,height: 27, width: 27, }} source={{uri: 'https://i.imgur.com/yCxMJY0.png'}} /> 
+                          </TouchableOpacity>
+                        </View> 
+                        }
+                          
+                      <View style={{ marginTop: 5,width: '100%'}}> 
                         <Text numberOfLines={1} style={{fontWeight: 'bold', fontSize: 10, color:'gray'}}>{item.type}</Text>
                         {(item.type =='CĂN HỘ STUDIO 21m²' || item.type =='CĂN HỘ STUDIO 45m²'|| item.type =='BIỆT THỰ 120m²') 
                           ? <Image style={{position: 'absolute', height: 30, width: 35, right: 0, resizeMode: 'contain'}} 
@@ -332,7 +379,6 @@ const Home_Tab = ( {navigation} ) => {
                           {(item.type =='CĂN HỘ STUDIO 21m²')?<Text style={{marginLeft: 10 , fontSize: 11, color: '#484848'}}>32</Text> : null}
                           {(item.type =='CĂN HỘ STUDIO 45m²')?<Text style={{marginLeft: 10 , fontSize: 11, color: '#484848'}}>28</Text> : null}
                           {(item.type =='CĂN HỘ DỊCH VỤ 35m²')?<Text style={{marginLeft: 10 , fontSize: 11, color: '#484848'}}>45</Text> : null}
-                          
 
                         </View>
                       </View> 
@@ -377,18 +423,17 @@ const styles = StyleSheet.create({
     search: {
       flexDirection: 'row',
       alignItems: 'center',
-      width: '80%',
+      width: '90%',
       borderColor: 'gray',
-      //backgroundColor: 'pink',
       shadowColor: "gray",
       shadowOffset: {
         width: 0,
         height: 1,
       },
       shadowOpacity: 0.22,
-      shadowRadius: 2.22,
+      shadowRadius: 1.22,
 
-      elevation: 3,
+      elevation: 1.5,
     },
 
     imgIc_search: {

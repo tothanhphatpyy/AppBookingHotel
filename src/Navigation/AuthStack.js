@@ -9,7 +9,7 @@ import RegistrationInfoUser from '../Screens/SignIn_SignUp/RegistrationInfoUser'
 const RootStack = createNativeStackNavigator();
 
 
-const AuthStack = ({navigation}) => {
+const AuthStack = () => {
   return (
     <RootStack.Navigator screenOptions={{headerShown: false}}>
       <RootStack.Screen name= 'Đăng nhập' component={Login} />

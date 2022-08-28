@@ -3,7 +3,6 @@ import React, {createContext, useEffect, useRef, useState} from 'react'
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { BASE_URL } from '../config';
 
 
 export const AuthContext = createContext();
@@ -12,6 +11,8 @@ export const AuthProvider = ({children}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [userToken, setUserToken] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
+  const [loadDataRoomOder, setLoadDataRoomOder] = useState(false);
+
 
 /*   useEffect(() =>{
     AsyncStorage.clear();
@@ -66,10 +67,14 @@ export const AuthProvider = ({children}) => {
     AsyncStorage.removeItem('userToken');
     setIsLoading(false);
   }
-
   
+  const loadData =() =>{
+    console.log('render-load');
+    setLoadDataRoomOder(!loadDataRoomOder);
+  }
+
   return (
-    <AuthContext.Provider value={{login, logout, isLoading, userToken, userInfo}}>
+    <AuthContext.Provider value={{login, logout, isLoading, userToken, userInfo, loadData, loadDataRoomOder}}>
       {children}
     </AuthContext.Provider>
   )
