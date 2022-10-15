@@ -18,7 +18,7 @@ const Order_Tab = ({ navigation, route}) => {
 
   //AsyncStorage.removeItem('historyOder');
   useEffect(() => {
-    console.log('re-render-useEffect');
+    //console.log('re-render-useEffect');
     const fetchData = async () =>{
       setLoading(true);
       try {
@@ -165,7 +165,7 @@ const Order_Tab = ({ navigation, route}) => {
             start={{x: 0, y: 0.5}}
             end={{x: 1, y: 1}}
             style={{alignItems: 'center', paddingVertical: 7, paddingHorizontal: 10, borderRadius: 10}}>
-            <Text style={{ fontSize: 15, fontWeight:'bold', color: 'white', paddingHorizontal: 20}}
+            <Text style={{ fontSize: 15, fontWeight:'bold', color: 'white', paddingHorizontal: 10}}
               >Liên hệ với chủ nhà</Text>
             </LinearGradient>
           </TouchableOpacity>    

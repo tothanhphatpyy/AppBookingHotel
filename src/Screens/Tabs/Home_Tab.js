@@ -65,7 +65,6 @@ const Home_Tab = ( {navigation} ) => {
     
   const setRoomFavourite = async(nameRoom) => {
     const listRoom = JSON.parse(await AsyncStorage.getItem('listRoomFavourite'))
-    console.log(listRoom);
     if(listRoom){
       let index = listRoom.findIndex(e => e == nameRoom);
       if(index !== -1){  //Có vị trí của index
@@ -91,10 +90,6 @@ const Home_Tab = ( {navigation} ) => {
       await AsyncStorage.setItem('listRoomFavourite', JSON.stringify(listNameroomFavourite));
     }
   }
-
-
-  
-
   const listVoucher =[
     {
       name: 'Momo',

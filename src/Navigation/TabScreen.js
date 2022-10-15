@@ -37,7 +37,7 @@ const TabScreen = () => {
         }}/>
       <Tabs.Screen name='Yêu thích' component={Like_Tab} 
         options={{
-          headerShown: true,
+          /* headerShown: true,
           headerTitleAlign: 'center',
           headerTitleStyle: { 
             textAlign:"center",
@@ -48,7 +48,7 @@ const TabScreen = () => {
           headerStyle: {
             height: 50,
             backgroundColor: '#FFFAFA',
-          },
+          }, */
           tabBarIcon: () => (
               <Image 
               source={{uri: 'https://img.icons8.com/material/344/like--v1.png'}}
