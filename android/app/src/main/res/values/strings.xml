@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">BookingHotel</string>
+    <string name="facebook_app_id">5263959350399332</string>
+    <string name="fb_login_protocol_scheme">fb5263959350399332</string>
+    <string name="facebook_client_token">1ca3abe5c77e6596b806c76e3b18aba6</string>
+
 </resources>

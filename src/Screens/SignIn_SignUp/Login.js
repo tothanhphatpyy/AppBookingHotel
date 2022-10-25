@@ -85,7 +85,8 @@ const Login = ({ navigation }) => {
           {(passWord.length) ==6 || passWord == '' ? null 
             :<Text style={{color: 'red', fontSize: 13, marginTop: 10, marginLeft: 40}}>Mật khẩu gồm 6 kí tự</Text> }
           
-          <TouchableOpacity>
+          <TouchableOpacity 
+            onPress={() => navigation.navigate('Đăng kí SĐT', {screenNext : 'forgot-password'})}>
             <Text style= {styles.textForgot}>Quên mật khẩu?</Text>
           </TouchableOpacity>
             
@@ -102,7 +103,7 @@ const Login = ({ navigation }) => {
               <TouchableOpacity>
                 <Text 
                 style= {styles.textSignnow}
-                onPress = {() => navigation.navigate('Đăng kí SĐT') }
+                onPress = {() => navigation.navigate('Đăng kí SĐT', {screenNext : 'Sign-in'}) }
                 >Đăng kí ngay</Text>
               </TouchableOpacity>     
           </View>
@@ -140,33 +141,31 @@ const Login = ({ navigation }) => {
             </View>
         </View>
        </Animatable.View>
-       <Modal
-              animationType= "slide"
-              transparent={true}
-              visible={modalAccess}
-              onRequestClose={() => setModalAccess(!modalAccess)}
-              >
-                <View style={{overflow: 'hidden'}}>
-                  <View style={{ backgroundColor: 'white', borderWidth: 1.5, borderColor: '#DCDCDC', borderRadius: 10, 
-                                 marginHorizontal: 10, height: windowHeight/2.5, marginTop: windowHeight/3, alignItems: 'center' }}>
-                       <TouchableOpacity style={{position: 'absolute', right: 20,top: 10}}
-                                        onPress={() => {setModalAccess(!modalAccess)}}>
-                        <Image source={{uri: 'https://i.imgur.com/dIsk0MM.png'}}
-                              style={{resizeMode: 'contain', width: 15, height: 15, }} 
-                              />
-                      </TouchableOpacity>
-                        <View> 
-                          <Text style={{color: 'black', marginTop: 30, fontSize: 20, fontWeight: 'bold', color: '#FF4500', textAlign: 'center'}}>Đăng nhập thất bại!</Text>
-                          <Text style={{color: 'black', marginTop: 10,fontSize: 16, fontWeight: 'bold', color: '#FF4500', textAlign: 'center'}}>Vui lòng kiểm tra lại</Text>
-                        </View>
-                      <Image source={{uri: 'https://i.imgur.com/mzeg5JT.png'}} 
-                             style={{resizeMode: 'contain', width: 150, height: 150, marginTop: 10}}
+      <Modal
+        animationType= "slide"
+        transparent={true}
+        visible={modalAccess}
+        onRequestClose={() => setModalAccess(!modalAccess)}
+        >
+        <View style={{overflow: 'hidden'}}>
+          <View style={{ backgroundColor: 'white', borderWidth: 1.5, borderColor: '#DCDCDC', borderRadius: 10, 
+                          marginHorizontal: 10, height: windowHeight/2.5, marginTop: windowHeight/3, alignItems: 'center' }}>
+                <TouchableOpacity style={{position: 'absolute', right: 20,top: 10}}
+                                onPress={() => {setModalAccess(!modalAccess)}}>
+                <Image source={{uri: 'https://i.imgur.com/dIsk0MM.png'}}
+                      style={{resizeMode: 'contain', width: 15, height: 15, }} 
                       />
-                      
-                  </View>
-                  
+              </TouchableOpacity>
+                <View> 
+                  <Text style={{color: 'black', marginTop: 30, fontSize: 20, fontWeight: 'bold', color: '#FF4500', textAlign: 'center'}}>Đăng nhập thất bại!</Text>
+                  <Text style={{color: 'black', marginTop: 10,fontSize: 16, fontWeight: 'bold', color: '#FF4500', textAlign: 'center'}}>Vui lòng kiểm tra lại</Text>
                 </View>
-            </Modal>
+              <Image source={{uri: 'https://i.imgur.com/mzeg5JT.png'}} 
+                      style={{resizeMode: 'contain', width: 150, height: 150, marginTop: 10}}
+              />
+          </View>
+        </View>
+      </Modal>
     </View>
   )
 }

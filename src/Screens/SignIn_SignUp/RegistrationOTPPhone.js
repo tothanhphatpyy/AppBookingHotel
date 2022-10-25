@@ -1,8 +1,44 @@
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native'
+import auth from '@react-native-firebase/auth';
+import React, { useState } from 'react';
+import { useEffect } from 'react';
 
-const RegistrationOTPPhone = ({ navigation }) => {
-    return (
+const RegistrationOTPPhone = ({ navigation, route}) => {
+
+  const [confirm, setConfirm] = useState(null);
+  const [code, setCode] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [statusCheck, setStatusCheck] = useState(false);
+  const sdt = route.params.sdt;
+  const screen = route.params.screenNext;
+  useEffect(() => {
+    console.log(sdt, screen);
+    const signInWithPhoneNumber = async(phoneNumber) => {
+      const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
+      setConfirm(confirmation);
+    }
+    signInWithPhoneNumber(`+84 ${sdt}`)
+    
+  }, [])
+
+
+  const confirmCode = async() => {
+    setLoading(true);
+    try {
+      const res = await confirm.confirm(code);
+      //console.log(res)
+      if(screen == 'sign-in')
+        navigation.navigate('Đăng kí thông tin User', {sdt: sdt})
+      else
+        navigation.navigate('Xác nhận mật khẩu', {sdt: sdt})
+    } catch (error) {
+      console.log('Invalid code.');
+      setStatusCheck(code);
+    }
+    setLoading(false);
+  }
+
+  return (
         <View style= {styles.container}>
         <Image
           style={styles.logoImage}
@@ -18,20 +54,27 @@ const RegistrationOTPPhone = ({ navigation }) => {
               <Text style= {styles.textPhone}>Vui lòng nhập mã để xác minh số điện thoại</Text>
     
               <View style= {styles.inputPhone}>
-    
-                  <TextInput
-                    style={styles.inputMyPhone} 
-                    placeholderTextColor={'gray'}
-                    textAlign ={'center'}
-                    placeholder="Mã có 6 số"
-                    keyboardType="numeric"
-                  />   
+                <TextInput
+                  style={styles.inputMyPhone} 
+                  placeholderTextColor={'gray'}
+                  textAlign ={'center'}
+                  placeholder="Mã có 6 số"
+                  keyboardType="numeric"
+                  onChangeText={text => setCode(text)}
+                />   
               </View>
+              {statusCheck==code &&code !== ''? 
+                <Text style={{color: 'red', marginTop: 10, marginLeft: '32%'}}>Mã OTP không đúng</Text>
+              : null}
     
-              <TouchableOpacity>
-                <Text style= {styles.btnRegis}
-                onPress ={ () => navigation.navigate('Đăng kí thông tin User')}
-                >TIẾP TỤC</Text>
+              <TouchableOpacity 
+                style={[styles.btnRegis,{backgroundColor: code.length ==6? '#FF4500': 'pink'}]}
+                disabled={code.length == 6? false: true }
+                onPress ={ () => confirmCode() }>
+                <Text style={styles.textRegis}>TIẾP TỤC</Text>
+                {loading && (
+                  <ActivityIndicator size="large" color="orange" style={{position: 'absolute', right: 10}}/>
+                )}
               </TouchableOpacity>
               
           </View>
@@ -68,7 +111,7 @@ const styles = StyleSheet.create({
         fontFamily: 'Roboto',
         marginTop: '5%',
         marginLeft: '10%',
-        fontSize: 28,
+        fontSize: 22,
         color: 'black',
         fontWeight: 'bold',
     },
@@ -97,13 +140,17 @@ const styles = StyleSheet.create({
 
     btnRegis: {
       marginHorizontal: '10%',
-      marginTop : '8%',
-      fontSize: 16,
-      fontWeight: 'bold',
-      textAlign: 'center',
+      marginTop : 20,
       backgroundColor: '#FF4500',
       paddingVertical: '3%',
       borderRadius: 6,
-      color: 'white'
+      alignItems: 'center',
+      justifyContent: 'center'
     },
+
+    textRegis: {
+      fontSize: 16,
+      fontWeight: 'bold',
+      color: 'white', 
+    }
 })

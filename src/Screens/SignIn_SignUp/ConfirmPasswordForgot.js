@@ -1,60 +1,50 @@
-import { StyleSheet, Text, View,Image, TextInput, TouchableOpacity, TouchableHighlight, TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView, ActivityIndicator } from 'react-native'
+import { StyleSheet, Text, View,Image, TextInput, TouchableOpacity, TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView, ActivityIndicator } from 'react-native'
 import React, { useReducer, useState, useContext} from 'react'
 import axios from 'axios';
 import {BASE_URL} from '../../Config';
-import { AuthContext } from '../../Context/AuthContext';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
 
 const initialInfoUser = {
-  name: '',
-  email: '',
   password: '',
   passwordConfirm: '',
   hidePassword: false,
   hidePasswordConfirm: false,
 }
+
 const reducer = (state, action) => {
   switch (action.type){
-    case 'UPDATE_NAME':
-    return { ...state, name: action.value }
-  case 'UPDATE_EMAIL':
-    return { ...state, email: action.value }
-  case 'UPDATE_PASSWORD':
-    return { ...state, password: action.value }
-  case 'UPDATE_PASSWORDCONFIRM':
-    return { ...state, passwordConfirm: action.value }
-  case 'HIDE_PASSWORD':
-    return { ...state, hidePassword: !action.value }
-  case 'HIDE_PASSWORDCONFIRM':
-    return { ...state, hidePasswordConfirm: !action.value }
-  default:
-    return state;
+    case 'UPDATE_PASSWORD':
+      return { ...state, password: action.value }
+    case 'UPDATE_PASSWORDCONFIRM':
+      return { ...state, passwordConfirm: action.value }
+    case 'HIDE_PASSWORD':
+      return { ...state, hidePassword: !action.value }
+    case 'HIDE_PASSWORDCONFIRM':
+      return { ...state, hidePasswordConfirm: !action.value }
+    default:
+      return state;
   }
 };
 
+const ConfirmPasswordForgot = ({navigation, route}) => {
 
-const RegistrationInfoUser = ({ navigation, route }) => {
-  const {login} = useContext(AuthContext);
-  const sdt = route.params.sdt;
+  const sdt = '0371231234'
+  //const sdt = route.params.sdt;
   const [loading, setLoading] = useState(false);
-  
+  const [state, dispatch] = useReducer(reducer, initialInfoUser);
+
   const handleSubmit = () => {
     const fetchData = async () =>{
       setLoading(true);
       try {
-        const res = await axios.post(`${BASE_URL}/register`,
+        const res = await axios.post(`${BASE_URL}/forgot-password`,
           {
             username: sdt,
-            name: state.name,
-            email: state.email,
             password: state.password,
           });
         console.log(res.data);
-        const token = 'token'
-        AsyncStorage.setItem('userInfo', JSON.stringify(res.data));
-        AsyncStorage.setItem('userToken', token);
         //navigation.navigate('TabScreen');
-        login(token, res.data);
       } catch (error) {
         console.error(error.message);
       }
@@ -62,8 +52,6 @@ const RegistrationInfoUser = ({ navigation, route }) => {
     }
     fetchData();
   }
-
-  const [state, dispatch] = useReducer(reducer, initialInfoUser);
   return (
     <KeyboardAvoidingView behavior="padding" style={styles.container}>
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -73,27 +61,8 @@ const RegistrationInfoUser = ({ navigation, route }) => {
           source={{uri :'https://i.imgur.com/T6eMqr7.png'}}
       />
       <View style = {styles.formLogin}>
-        <Text style= {styles.textLogin}>Đăng ký thông tin</Text>
-        <View style = {styles.LoginInput}>
-          <Text style= {styles.textPhone}>Họ tên</Text>
-          <TextInput
-          style={styles.inputPhone}
-          onChangeText={(text) => {
-            dispatch({ type: 'UPDATE_NAME', value: text })
-          }}
-          placeholderTextColor={'gray'}
-          placeholder="Nhập họ tên của bạn"
-          />
-          <Text style= {styles.textPhone}>Email</Text>
-          <TextInput
-          style={styles.inputPhone}
-          onChangeText={(text) => {
-            dispatch({ type: 'UPDATE_EMAIL', value: text })
-          }}
-          placeholderTextColor={'gray'}
-          placeholder="Nhập email của bạn"
-          />
-
+        <Text style= {styles.textLogin}>Lấy lại mật khẩu</Text>
+        <View style = {{marginTop: 10}}>
           <Text style= {styles.textPhone}>Mật khẩu</Text>
           <View style={{justifyContent: 'center'}}>
             <TextInput
@@ -148,15 +117,15 @@ const RegistrationInfoUser = ({ navigation, route }) => {
             </TouchableOpacity>
           </View>
         </View>
-        {state.name == '' ||  state.email == '' || state.password == '' || state.passwordConfirm == ''?
-          <Text style={{color: 'red', marginLeft: '10%', marginTop: 10}}>Vui lòng nhập đủ thông tin</Text>
+        {state.password !== state.passwordConfirm?
+          <Text style={{color: 'red', marginLeft: '10%', marginTop: 10}}>Mật khẩu không khớp</Text>
           : null
         }
         <TouchableOpacity 
           style= {[styles.btnRegis,{backgroundColor: state.passwordConfirm.length ==6? '#FF4500': 'pink'}]}
           disabled={state.passwordConfirm.length ==6? false: true}
           onPress ={ () => handleSubmit()}>
-          <Text style={{fontSize: 16, fontWeight: 'bold', textAlign: 'center', color: 'white'}}>ĐĂNG KÝ</Text>
+          <Text style={{fontSize: 16, fontWeight: 'bold', textAlign: 'center', color: 'white'}}>TIẾP TỤC</Text>
           {loading && (
             <ActivityIndicator size="large" color="orange" style={{position: 'absolute', right: 10}}/>
           )}
@@ -166,11 +135,10 @@ const RegistrationInfoUser = ({ navigation, route }) => {
       </View>
     </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
-   
   )
 }
 
-export default RegistrationInfoUser
+export default ConfirmPasswordForgot
 
 const styles = StyleSheet.create({
   container: {
@@ -205,7 +173,7 @@ const styles = StyleSheet.create({
       fontFamily: 'Roboto',
       marginTop: '3%',
       marginLeft: '10%',
-      fontSize: 20,
+      fontSize: 19,
       color: 'black',
       fontWeight: 'bold',
   },
@@ -223,7 +191,7 @@ const styles = StyleSheet.create({
       fontFamily: 'Roboto',
       marginTop: '3%',
       marginLeft: '10%',
-      fontSize: 20,
+      fontSize: 19,
       color: 'black',
       fontWeight: 'bold',
   },
