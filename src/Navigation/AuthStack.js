@@ -14,7 +14,7 @@ const RootStack = createNativeStackNavigator();
 
 const AuthStack = () => {
   return (
-    <RootStack.Navigator screenOptions={{headerShown: false}} initialRouteName='LoginEmail'>
+    <RootStack.Navigator screenOptions={{headerShown: false}} /* initialRouteName='LoginEmail' */>
       <RootStack.Screen name= 'Đăng nhập' component={Login} />
       <RootStack.Screen name='Đăng kí SĐT' component={RegistrationPhone} />
       <RootStack.Screen name= 'Đăng kí SĐT OTP' component={RegistrationOTPPhone}/> 

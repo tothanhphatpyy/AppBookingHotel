@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "1080668147114-abqolihau7g37lldsk4hqv08lpdp89s6.apps.googleusercontent.com",
+          "client_id": "1080668147114-g2p60olpgdq1d1e7rlqo41ofg6eb24q7.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.bookinghotel",
-            "certificate_hash": "d747705666df4606e06b27d4de2f472186ec3538"
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
           }
         },
         {

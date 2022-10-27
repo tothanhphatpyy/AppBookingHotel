@@ -1401,24 +1401,24 @@
   resolved "https://registry.npmjs.org/@react-native-community/eslint-plugin/-/eslint-plugin-1.2.0.tgz"
   integrity sha512-o6aam+0Ug1xGK3ABYmBm0B1YuEKfM/5kaoZO0eHbZwSpw9UzDX4G5y4Nx/K20FHqUmJHkZmLvOUFYwN4N+HqKA==
 
-"@react-native-firebase/app@^15.7.0":
-  version "15.7.0"
-  resolved "https://registry.npmjs.org/@react-native-firebase/app/-/app-15.7.0.tgz"
-  integrity sha512-ZyrvewIkQC0UHDuHxXyc25/V8xYOa4xlukIHIbtJeBzVCCyVgZxF4Svyqs+CosqbHOuwWnmg+AW0rMvjrRcdmw==
+"@react-native-firebase/app@^16.2.0":
+  version "16.2.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/app/-/app-16.2.0.tgz#67b8910e6847db0ba122fbff7736aff2bedf8503"
+  integrity sha512-EokTfI8ANqtpBSdf3fxKsBQ00JR9lFQZ8bwaTkjqdazVnGeVFq4RX8XrL3hHB+WwZp67Ml2Kbt0i1+85Wj76qg==
   dependencies:
     "@expo/config-plugins" "^5.0.1"
     opencollective-postinstall "^2.0.1"
     superstruct "^0.6.2"
 
-"@react-native-firebase/auth@^15.7.1":
-  version "15.7.1"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/auth/-/auth-15.7.1.tgz#6bfc3be0f1bc3503382593a9c9dbd08b4e21e07e"
-  integrity sha512-KtxVcoIpZX5aT0rNaHWo733dP8cCZUBNV90FboapyvasQ5qZdMu+xS2yYe8FdimUlMlzGhMmLyXTxghGmVIZjw==
+"@react-native-firebase/auth@^16.2.0":
+  version "16.2.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/auth/-/auth-16.2.0.tgz#dd7064bbe6b0ac5d5b86c5f10d34c4e6e2f02e4c"
+  integrity sha512-1oh5Tbqj2MPfGLIR4AasQ2AmVnRUwlZlc+x861WGWIe63l3TO8AmUoWq8HBCxOokZGTP8i1YUrxAGwOrF1aaLA==
 
-"@react-native-firebase/messaging@^15.7.0":
-  version "15.7.0"
-  resolved "https://registry.npmjs.org/@react-native-firebase/messaging/-/messaging-15.7.0.tgz"
-  integrity sha512-c2BLLbBm4kMjbkm1fJ465qZ2o24GHylLxeHSjU63SHIUVhnD5j7rWV/XvumNIEkSWtZmy9v+uGpmArLCAjZraw==
+"@react-native-firebase/messaging@^16.2.0":
+  version "16.2.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/messaging/-/messaging-16.2.0.tgz#ee2ad8d6a4abfcad536277937ba8de0ef6d16f68"
+  integrity sha512-Hrrlof8dUBZJKM6HGPEUTw4lMxWKftyUgRvLnP4L2EqWokB52y1MX8zTrFcQ5RQRhbz7trG5GBnXvOWeoo6c7g==
 
 "@react-native-google-signin/google-signin@^8.0.1":
   version "8.0.1"

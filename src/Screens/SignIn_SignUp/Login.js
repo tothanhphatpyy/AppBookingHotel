@@ -4,7 +4,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Animatable from 'react-native-animatable';
 import { AuthContext } from '../../Context/AuthContext';
-import {BASE_URL} from '../../Config';
+import {BASE_URL, configGoogleSignin, onGoogleButtonPress} from '../../Config';
 
 
 
@@ -12,6 +12,9 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const Login = ({ navigation }) => {
+  useEffect(() => {
+    configGoogleSignin();
+  },[])
 
   const [userName, setUserName] = useState('');
   const [passWord, setPassWord] = useState('');
@@ -122,7 +125,13 @@ const Login = ({ navigation }) => {
                 </TouchableOpacity>
               </View>
               <View style= {[styles.img,styles.imgGG]}>
-                <TouchableOpacity>
+                <TouchableOpacity
+                  onPress={async() => {
+                    await onGoogleButtonPress()
+                    const userInfo = JSON.parse(await AsyncStorage.getItem('userInfo'));
+                    const userToken = await AsyncStorage.getItem('userToken');
+                    login(userToken, userInfo)
+                  }}>
                   <Image
                       style={{resizeMode: 'contain', height: 35, width: 35}}
                       source={{uri : 'https://i.imgur.com/4JYzqQD.png'}} //logo Google
@@ -304,7 +313,6 @@ const styles = StyleSheet.create({
       borderRightWidth: 3,
       borderColor: '#DCDCDC',
       borderRadius : 25,
-
     },
 
     imgGG: {
