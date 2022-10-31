@@ -1,19 +1,23 @@
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, {useEffect} from 'react'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const Like_Tab = () => {
 
   useEffect(() => {
-    console.log('render');
+    const fetchData = async () =>{
+    const listRoomLove = JSON.parse(await AsyncStorage.getItem('listRoomFavourite'));
+    console.log(listRoomLove);
+    }
+    fetchData();
   }, [])
-
   return (
     <View>
      {/*  Tab top */}
       <View style={{backgroundColor: '#F8F8F8',height: 50, width: '100%',
                 borderBottomColor: '#DCDCDC', borderBottomWidth: 1,}}>
         <View style={{alignItems: 'center', flexDirection: 'row',justifyContent: 'center', height: 50}}>
-            <Text style={{color: 'black', fontWeight: '500', fontSize: 18}}>Phòng đã đặt</Text>
+            <Text style={{color: 'black', fontWeight: '500', fontSize: 18}}>Yêu thích</Text>
         </View>
       </View>
 

@@ -10,7 +10,7 @@ import {BASE_URL} from '../../Config';
 
 const Home_Tab = ( {navigation} ) => {
 
-  const [colorEvent, setColorEvent] = useState(2);
+  const [colorEvent, setColorEvent] = useState(6);
   const [listLocation, setListLocation] = useState([]);
   const [listRoomSuggest, setListRoomSuggest] = useState([]);
   const [listRoomFavourite, setListRoomFavourite] = useState([]);
@@ -34,17 +34,6 @@ const Home_Tab = ( {navigation} ) => {
     fetchData();
   }, []);
 
-  const renderHotel = async (idLocation) => {
-      setLoading(true);
-      try {
-        const {data: response} = await axios.get(`${BASE_URL}/list-hotel/${idLocation}`);
-        setListRoomSuggest(response);
-      } catch (error) {
-        console.error(error.message);
-      }
-      setLoading(false);
-  }
-
   useEffect(() => {
     //AsyncStorage.removeItem('listRoomFavourite');
     const fetchData = async () =>{
@@ -62,6 +51,17 @@ const Home_Tab = ( {navigation} ) => {
     }
     fetchData();
   }, []);
+
+  const renderHotel = async (idLocation) => {
+    setLoading(true);
+    try {
+      const {data: response} = await axios.get(`${BASE_URL}/list-hotel/${idLocation}`);
+      setListRoomSuggest(response);
+    } catch (error) {
+      console.error(error.message);
+    }
+    setLoading(false);
+}
     
   const setRoomFavourite = async(nameRoom) => {
     const listRoom = JSON.parse(await AsyncStorage.getItem('listRoomFavourite'))
@@ -79,7 +79,7 @@ const Home_Tab = ( {navigation} ) => {
         }
       } 
       else {
-        listRoom.push(nameRoom);
+        listRoom.unshift(nameRoom);
         setListRoomFavourite(listRoom);
         await AsyncStorage.setItem('listRoomFavourite', JSON.stringify(listRoom));
       }
